@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,10pt]{article}
 \usepackage[brazil]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -15,6 +15,9 @@
 \usepackage{multicol}
 \usepackage{enumitem}
 \usepackage{setspace}
+\setlength{\columnseprule}{0.4pt}
+\setlength{\columnsep}{1cm}   % aumenta ou diminui a distância entre colunas
+
 
 \input{commands.tex}
 
@@ -37,7 +40,7 @@
     \fussy%
 }
 \PassOptionsToPackage{table}{xcolor}
-\renewcommand{\baselinestretch}{1.5}
+\renewcommand{\baselinestretch}{1}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -54,8 +57,14 @@
 \newcommand{\numcolumns}{2} % Número de colunas no gabarito
 % ---------------------------
 
+% --- Ajustes: mude aqui ---
+\newcommand{\Ncnt}{20}        % Número de questões (mude para n desejado)
+\newcommand{\numcolumnscnt}{3} % Número de colunas no gabarito
+% ---------------------------
+
 % Comando para desenhar uma bolinha vazia
 \newcommand{\bubble}{\tikz\draw (0,0) circle (0.14cm);}
+
 
 % Espaçamento das linhas dentro do enumerado
 \setlist[enumerate]{itemsep=8pt, leftmargin=*, label=\arabic*.}
@@ -66,10 +75,10 @@
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
-\includegraphics[scale=0.6]{images/logoporphyrio.png} & 
+\includegraphics[scale=0.4]{images/logoporphyrio.png} & 
 \begin{minipage}{10cm}
 \begin{center}
-\vspace{-2.5cm}
+\vspace{-2.2cm}
 \textbf{\large Avaliação Integrada} \\
 {\large 1ª Série do Ensino Médio \\
 3º Bimestre de 2025 \\
@@ -81,19 +90,19 @@
 \end{tabular}
 \end{center}
 
-\vspace{0.5cm}
+%\vspace{0.5cm}
 
 \noindent
 %\textbf{TURMA:} \fbox{A} \fbox{B} \fbox{C} \fbox{D} \fbox{E} \fbox{F} \fbox{G} \\[0.3cm]
 
 \noindent
-\textbf{Aluno:} \underline{\hspace{10cm}} \hspace{0.5cm} 
+\textbf{Aluno(a):} \underline{\hspace{10cm}} \hspace{0.5cm} 
 \textbf{Turma:} \underline{\hspace{1cm}} \\
 \newline
-\noindent\rule{10cm}{0.4pt} \\
-Nome do Aluno(a)
+\textbf{Nome do Aluno(a)} \noindent\rule{11cm}{0.4pt} \\
 
-\vspace{0.5cm}
+
+%\vspace{0.5cm}
 
 \noindent
 \textbf{OBSERVAÇÕES:}
@@ -101,29 +110,70 @@ Nome do Aluno(a)
     %\item Não se esqueça de preencher seu nome, nº e turma;
     %\item Pinte o quadrado completamente referente a sua turma;
     \item Marque somente uma alternativa para cada questão;
-    \item Pinte o círculo completamente (caneta azul ou preta);
+    \item Pinte o círculo completamente (caneta azul ou preta) na sua resposta escolhida;
     \item A questão será anulada, caso haja mais de uma alternativa assinalada.
-    \item Preencha a bolinha correspondente à alternativa escolhida.
 \end{itemize}
 
-\vspace{0.4cm}
+
+\textbf{\small MATEM\'ATICA}
+\begin{flushleft}
+\hspace{0.2cm}
+\begin{tikzpicture}[baseline=(current bounding box.center)]
+      % posicionamento x das bolinhas; ajuste os valores se quiser mais/menos espaço
+      \node at (0,0)   {};          \node[font=\small] at (-0.5,-0.5) {A};
+      \node at (0.9,0) {};        \node[font=\small] at (0.4,-0.5) {B};
+      \node at (1.8,0) {};        \node[font=\small] at (1.3,-0.5) {C};
+      \node at (2.7,0) {};        \node[font=\small] at (2.2,-0.5) {D};
+      \node at (3.6,0) {};        \node[font=\small] at (3.1,-0.5) {E};
+\end{tikzpicture}%
+\end{flushleft}
+
 \begin{multicols}{\numcolumns}
-\begin{enumerate}
+\begin{enumerate}[itemsep=1pt, topsep=1pt]
 % Gera de 1 até \N automaticamente usando foreach
 \foreach \i in {1,...,\N}{%
   \item \hspace{-0.4em}%
     \begin{tikzpicture}[baseline=(current bounding box.center)]
       % posicionamento x das bolinhas; ajuste os valores se quiser mais/menos espaço
-      \node at (0,0) {\bubble};          \node[font=\small] at (0,-0.5) {A};
-      \node at (0.9,0) {\bubble};        \node[font=\small] at (0.9,-0.5) {B};
-      \node at (1.8,0) {\bubble};        \node[font=\small] at (1.8,-0.5) {C};
-      \node at (2.7,0) {\bubble};        \node[font=\small] at (2.7,-0.5) {D};
-      \node at (3.6,0) {\bubble};        \node[font=\small] at (3.6,-0.5) {E};
+      \node at (0,0) {\bubble};   
+      \node at (0.9,0) {\bubble}; 
+      \node at (1.8,0) {\bubble}; 
+      \node at (2.7,0) {\bubble}; 
+      \node at (3.6,0) {\bubble}; 
     \end{tikzpicture}%
 }
 \end{enumerate}
 \end{multicols}
 
+\textbf{\small EDUCAÇÃO FINANCEIRA E CIÊNCIAS DA NATUREZA}
+\begin{flushleft}
+\hspace{0.2cm}
+\begin{tikzpicture}[baseline=(current bounding box.center)]
+      % posicionamento x das bolinhas; ajuste os valores se quiser mais/menos espaço
+      \node at (0,0)   {};          \node[font=\small] at (-0.5,-0.5) {A};
+      \node at (0.9,0) {};        \node[font=\small] at (0.4,-0.5) {B};
+      \node at (1.8,0) {};        \node[font=\small] at (1.3,-0.5) {C};
+      \node at (2.7,0) {};        \node[font=\small] at (2.2,-0.5) {D};
+      \node at (3.6,0) {};        \node[font=\small] at (3.1,-0.5) {E};
+\end{tikzpicture}%
+\end{flushleft}
+
+\begin{multicols}{\numcolumnscnt}
+\begin{enumerate}[itemsep=1pt, topsep=1pt]
+% Gera de 1 até \N automaticamente usando foreach
+\foreach \i in {1,...,\Ncnt}{%
+  \item \hspace{-0.4em}%
+    \begin{tikzpicture}[baseline=(current bounding box.center)]
+      % posicionamento x das bolinhas; ajuste os valores se quiser mais/menos espaço
+      \node at (0,0) {\bubble};   
+      \node at (0.9,0) {\bubble}; 
+      \node at (1.8,0) {\bubble}; 
+      \node at (2.7,0) {\bubble}; 
+      \node at (3.6,0) {\bubble}; 
+    \end{tikzpicture}%
+}
+\end{enumerate}
+\end{multicols}
 
 
 \end{document}
