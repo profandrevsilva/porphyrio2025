@@ -58,7 +58,7 @@
 % ---------------------------
 
 % --- Ajustes: mude aqui ---
-\newcommand{\Ncnt}{20}        % Número de questões (mude para n desejado)
+\newcommand{\Ncnt}{30}        % Número de questões (mude para n desejado)
 \newcommand{\numcolumnscnt}{3} % Número de colunas no gabarito
 % ---------------------------
 
@@ -160,8 +160,9 @@
 
 \begin{multicols}{\numcolumnscnt}
 \begin{enumerate}[itemsep=1pt, topsep=1pt]
+\setcounter{enumi}{10} % começa em 11, pois enumi é o contador interno
 % Gera de 1 até \N automaticamente usando foreach
-\foreach \i in {1,...,\Ncnt}{%
+\foreach \i in {11,...,\Ncnt}{%
   \item \hspace{-0.4em}%
     \begin{tikzpicture}[baseline=(current bounding box.center)]
       % posicionamento x das bolinhas; ajuste os valores se quiser mais/menos espaço
