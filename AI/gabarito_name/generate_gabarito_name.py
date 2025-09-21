@@ -6,6 +6,9 @@ from reportlab.lib.pagesizes import letter
 import io
 import os
 from pathlib import Path
+from PyPDF2 import PdfReader
+from pypdf import PdfReader, PdfWriter
+
 
 turmas = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
@@ -44,7 +47,6 @@ for turma in turmas:
         packet.seek(0)
 
         # 3. Read the overlay PDF
-        from PyPDF2 import PdfReader
         overlay_pdf = PdfReader(packet)
 
         # 4. Merge the overlay onto the first page
@@ -62,3 +64,28 @@ for turma in turmas:
             writer.write(f)
 
         print(f"Name: {name} added successfully!")
+
+    # merge files
+    folder_path = Path(f"{folder_name}")
+
+    pdf_files = df['Nome'].tolist()
+
+    #print(pdf_files)
+
+    writer = PdfWriter()
+
+    output_file = f"output_pdf/1-Serie-{turma}.pdf"
+
+    for pdf in pdf_files:
+        pdf = pdf + f"_1{turma}.pdf"
+        out_pdf = f'pdfs/{turma}/{pdf}'
+        print(out_pdf)
+
+        reader = PdfReader(out_pdf)
+        for page in reader.pages:
+            writer.add_page(page)
+
+    with open(output_file, "wb") as out_file:
+        writer.write(out_file)
+
+    print(f"All PDFs merged into {output_file}.pdf")
