@@ -5,6 +5,8 @@ import fitz  # PyMuPDF
 from pdf2image import convert_from_path
 import cv2
 import numpy as np
+import random
+
 
 # first matrix: 1
 x1 = [106 + 25*i for i in range(5)]
@@ -15,16 +17,16 @@ x2 = [328 + 25*i for i in range(5)]
 y2 = [357 + 21*i for i in range(5)]
 
 # first matrix: 3
-x3 = [106 + 25*i for i in range(5)]
-y3 = [357 + 21*i for i in range(5)]
+x3 = [105 + 25*i for i in range(5)]
+y3 = [513 + 20*i for i in range(7)]
 
 # first matrix: 4
 x4 = [254 + 25*i for i in range(5)]
-y4 = [513 + 21*i for i in range(5)]
+y4 = [513 + 20*i for i in range(7)]
 
 # first matrix: 5
 x5 = [403 + 25*i for i in range(5)]
-y5 = [513 + 24*i for i in range(5)]
+y5 = [513 + 24*i for i in range(7)]
 
 
 # Converter PDF em imagens
@@ -81,11 +83,50 @@ for page_num, img in enumerate(pages, start=1):
 #circles = [(403, 513), (428,537), (453, 561), (478,585), (503,609)]
 
 
+radius = 4.2  # em pont
 
+circles = []
 
-radius = 4.2  # em pontos
+j = 0
+for i in range(5):
+    y = y1[j]
+    x = random.choice(x1)
+    j = j+1
+    print(x, y)
+    circles.append((x, y)) 
 
-print(circles_list)
+j = 0
+for i in range(5):
+    y = y2[j]
+    x = random.choice(x2)+ 1
+    j = j+1
+    print(x, y)
+    circles.append((x, y)) 
+
+j = 0
+for i in range(7):
+    y = y3[j]
+    x = random.choice(x3)+ 1
+    j = j+1
+    print(x, y)
+    circles.append((x, y)) 
+
+j = 0
+for i in range(7):
+    y = y4[j]
+    x = random.choice(x4)+ 1
+    j = j+1
+    print(x, y)
+    circles.append((x, y))
+
+j = 0
+for i in range(6):
+    y = y5[j]
+    x = random.choice(x5)+ 1
+    j = j+1
+    print(x, y)
+    circles.append((x, y))
+
 for x, y in circles:
     # Draw filled circle
     shape = page.new_shape()
