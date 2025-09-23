@@ -3,18 +3,18 @@ import numpy as np
 from pathlib import Path
 
 # ---------- parâmetros ----------
-img_path = "math_gabarito.png"    # ajuste aqui
-out_annot = "gabarito_final.png"
-FILL_THRESHOLD = 0.25             # limiar para considerar uma bolha preenchida
+img_path = "edf_cnt_gabarito.png"
+out_annot = "gabarito_final_adaptado.png"
+FILL_THRESHOLD = 0.4             # limiar ajustado para bolhas preenchidas
 K_COLUMNS = 5                     # A, B, C, D, E
 # Hough params
 HOUGH_DP = 1.2
 HOUGH_MIN_DIST = 25
 HOUGH_PARAM1 = 50
-HOUGH_PARAM2 = 28
+HOUGH_PARAM2 = 25                 # mais baixo para capturar bolhas menores
 HOUGH_MIN_RADIUS = 10
-HOUGH_MAX_RADIUS = 40
-TOP_MARGIN_FRAC = 0.12
+HOUGH_MAX_RADIUS = 25
+TOP_MARGIN_FRAC = 0.05             # reduzido se não houver cabeçalho
 # ---------------------------------
 
 img_path = Path(img_path)
@@ -50,25 +50,12 @@ thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=1)
 
 # informações úteis
 all_r = np.array([r for (_, _, r) in circles])
-median_r = float(np.median(all_r)) if len(all_r) > 0 else 20.0
+median_r = float(np.median(all_r)) if len(all_r) > 0 else 15.0
 inner_r = max(3, int(median_r * 0.45))  # máscara interna (evita borda)
 
-# split em blocos (colunas à esquerda / direita) por gap grande em X
+# split em blocos por gap grande em X
 xs = sorted([c[0] for c in circles])
-if len(xs) > 1:
-    diffs = np.diff(xs)
-    max_gap_idx = int(np.argmax(diffs))
-    max_gap = diffs[max_gap_idx]
-    median_gap = np.median(diffs)
-    if max_gap > median_gap * 2.0:
-        split_x = (xs[max_gap_idx] + xs[max_gap_idx + 1]) / 2.0
-        left = [c for c in circles if c[0] <= split_x]
-        right = [c for c in circles if c[0] > split_x]
-        blocks = [left, right]
-    else:
-        blocks = [circles]
-else:
-    blocks = [circles]
+blocks = [circles]  # neste caso, todos juntos funcionam
 
 # k-means 1D simples para achar centros de coluna (x)
 def kmeans_1d(xs, k=5, iters=20):
@@ -77,7 +64,6 @@ def kmeans_1d(xs, k=5, iters=20):
         return []
     centers = np.linspace(xs.min(), xs.max(), k)
     for _ in range(iters):
-        # assign
         groups = [[] for _ in range(k)]
         for x in xs:
             idx = int(np.argmin(np.abs(centers - x)))
@@ -90,7 +76,6 @@ def kmeans_1d(xs, k=5, iters=20):
                     centers[i] = newc
                     changed = True
             else:
-                # reinit empty center
                 centers[i] = xs[np.random.randint(0, len(xs))]
                 changed = True
         if not changed:
@@ -104,33 +89,13 @@ question_offset = 0
 for block in blocks:
     if not block:
         continue
-    # xs do block para achar colunas
     block_xs = sorted([c[0] for c in block])
     col_centers = kmeans_1d(block_xs, k=K_COLUMNS, iters=20)
-    if len(col_centers) != K_COLUMNS:
-        # fallback: agrupar por gaps grandes
-        # tenta dividir em K_COLUMNS grupos por diffs
-        diffs = np.diff(block_xs) if len(block_xs) > 1 else np.array([])
-        tol = np.median(diffs) * 3 if len(diffs) > 0 else 50
-        groups = []
-        current = [block_xs[0]]
-        for didx in range(len(diffs)):
-            if diffs[didx] < tol:
-                current.append(block_xs[didx+1])
-            else:
-                groups.append(current); current = [block_xs[didx+1]]
-        groups.append(current)
-        col_centers = [int(np.median(g)) for g in groups]
-        # if still wrong, evenly space
-        if len(col_centers) != K_COLUMNS:
-            col_centers = list(np.linspace(min(block_xs), max(block_xs), K_COLUMNS))
-    # agrupar por linhas (y)
     block_sorted = sorted(block, key=lambda t: t[1])
     ys = np.array([b[1] for b in block_sorted])
     diffs_y = np.diff(ys) if len(ys) > 1 else np.array([])
-    candidate = diffs_y[diffs_y > 5] if len(diffs_y) > 0 else np.array([])
-    row_spacing = float(np.median(candidate)) if len(candidate) > 0 else 60.0
-    tol_y = max(8.0, row_spacing * 0.5)
+    row_spacing = float(np.median(diffs_y)) if len(diffs_y) > 0 else 40.0
+    tol_y = max(5.0, row_spacing * 0.5)
     rows = []
     current = [block_sorted[0]]
     for c in block_sorted[1:]:
@@ -141,30 +106,23 @@ for block in blocks:
             current = [c]
     rows.append(current)
 
-    # para cada row, avaliar cada coluna (usar circle se existir perto, senão amostrar no centro)
     for i, row in enumerate(rows, start=1):
         row_y = int(np.median([r[1] for r in row]))
-        # construímos um dicionário de pontos do bloco por (aprox) posição para consulta rápida
-        # para cada coluna center procuramos um círculo com cy próximo de row_y e cx próximo de center
         fill_scores = []
         for center_x in col_centers:
-            # procura candidato no block com condição vertical
             candidates = [c for c in block if abs(c[1] - row_y) <= tol_y and abs(c[0] - center_x) <= median_r*1.2]
             if candidates:
-                # usa o mais próximo em x
                 c = min(candidates, key=lambda t: abs(t[0] - center_x))
                 cx, cy, cr = c
                 mask_cx, mask_cy = int(cx), int(cy)
                 mask_r = max(3, int(cr * 0.45))
             else:
-                # sem candidato direto: amostra no centro estimado
                 mask_cx, mask_cy = int(center_x), int(row_y)
                 mask_r = max(3, int(median_r * 0.45))
             mask = np.zeros_like(thresh)
             cv2.circle(mask, (mask_cx, mask_cy), mask_r, 255, -1)
             mean_val = cv2.mean(thresh, mask=mask)[0]
             fill_scores.append(mean_val / 255.0)
-        # escolhe melhor alternativa na linha
         best_idx = int(np.argmax(fill_scores))
         best_val = fill_scores[best_idx]
         if best_val > FILL_THRESHOLD:
@@ -172,29 +130,18 @@ for block in blocks:
             results[qnum] = alternatives[best_idx]
     question_offset += len(rows)
 
-# imprime resultado ordenado
-if not results:
-    print("Gabarito vazio — reveja parâmetros (FILL_THRESHOLD / HOUGH_PARAM2 / radii).")
-else:
-    for q in sorted(results.keys()):
-        print(f"Questão {q}: alternativa {results[q]}")
+# imprime resultado
+for q in sorted(results.keys()):
+    print(f"Questão {q}: alternativa {results[q]}")
 
-# salva image anotada (bolhas e preenchidas)
+# salva imagem anotada
 annot = img_color.copy()
-# desenha todos os centros de coluna (opcional)
-for block in blocks:
-    if not block: continue
-    block_xs = sorted([c[0] for c in block])
-    col_centers = kmeans_1d(block_xs, k=K_COLUMNS, iters=20)
-    for cx in col_centers:
-        cv2.line(annot, (int(cx), 0), (int(cx), h), (200, 200, 200), 1)
-
-# desenha círculos detectados e marcações
 for (x, y, r) in circles:
     cv2.circle(annot, (x, y), r, (0, 255, 0), 2)
 for q, alt in results.items():
-    # anotação simples: escreve texto próximo ao topo de cada row (não é a posição precisa)
-    cv2.putText(annot, f"{q}:{alt}", (10, 20 + 20 * q), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-
+    # aproximação para desenho perto do círculo
+    row = rows[q-1] if q-1 < len(rows) else rows[0]
+    cx, cy, _ = row[0]
+    cv2.putText(annot, f"{alt}", (cx-10, cy+5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 cv2.imwrite(out_annot, annot)
 print("Imagem anotada salva em", out_annot)

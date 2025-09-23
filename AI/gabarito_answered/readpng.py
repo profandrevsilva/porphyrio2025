@@ -28,7 +28,8 @@ for cnt in contours:
     circularity = 4 * np.pi * (area / (perimeter * perimeter))
     if 0.7 < circularity <= 1.2:  # 1.0 is a perfect circle
         (x, y), radius = cv2.minEnclosingCircle(cnt)
-        circles.append((int(x), int(y), int(radius)))
+        if radius > 12:
+            circles.append((int(x), int(y), int(radius)))
 
 print(f"Detected {len(circles)} black circles:")
 for c in circles:
