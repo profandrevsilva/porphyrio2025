@@ -22,3 +22,12 @@ To edit this repository in MakeCode.
 
 * for PXT/microbit
 <script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
+
+
+```bash
+# install packages linux
+sudo xargs -a packages_list.txt apt-get install -y
+
+# install pip 
+pip install -r requirements.txt
+```
