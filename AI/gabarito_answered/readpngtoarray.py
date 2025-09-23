@@ -38,7 +38,7 @@ for cnt in contours:
     circularity = 4 * np.pi * (area / (perimeter * perimeter))
     if 0.7 < circularity <= 1.2:  # 1.0 is perfect circle
         (x, y), radius = cv2.minEnclosingCircle(cnt)
-        if radius > 10:  # ignore tiny circles
+        if radius > 12:  # ignore tiny circles
             circles.append((int(x), int(y), int(radius)))
 
 # -----------------------------
