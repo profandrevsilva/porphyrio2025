@@ -1,6 +1,26 @@
 import cv2
 import numpy as np
 from pathlib import Path
+import pdfplumber
+
+pdf_path = "circulos_preenchidos.pdf"
+
+full_text = ""
+
+with pdfplumber.open(pdf_path) as pdf:
+    for page in pdf.pages:
+        text = page.extract_text()
+        if text:
+            full_text += text + "\n"
+
+# get name 
+name = full_text.split("Aluno(a): ")[1].split("Turma:")[0]
+print(name)
+
+
+# get turma
+turma = full_text.split("Turma: ")[1].split("Nome do Aluno(a)")[0]
+print(turma)
 
 # ---------- parâmetros ----------
 img_path = "math_gabarito.png"    # ajuste aqui
@@ -195,6 +215,37 @@ for (x, y, r) in circles:
 for q, alt in results.items():
     # anotação simples: escreve texto próximo ao topo de cada row (não é a posição precisa)
     cv2.putText(annot, f"{q}:{alt}", (10, 20 + 20 * q), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+
+# font
+font = cv2.FONT_HERSHEY_SIMPLEX
+
+# org
+org = (600, 60)
+
+# fontScale
+fontScale = 1
+ 
+# Red color in BGR
+color = (0, 0, 255)
+
+# Line thickness of 2 px
+thickness = 2
+
+# Using cv2.putText() method
+image = cv2.putText(annot, name, org, font, fontScale, 
+                 color, thickness, cv2.LINE_AA, False)
+
+turma = 'Turma: ' + turma
+
+print(str(turma))
+
+# org
+org = (1400, 60)
+
+# Using cv2.putText() method
+image = cv2.putText(annot, turma, org, font, fontScale, 
+                 color, thickness, cv2.LINE_AA, False)
+
 
 cv2.imwrite(out_annot, annot)
 print("Imagem anotada salva em", out_annot)
