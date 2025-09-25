@@ -116,10 +116,99 @@ for row in rows:
             print(x, y, ratio)
             color = (0, 0, 255)
             cv2.circle(img_color, (x, y), r, color, 2)
-        
-        if x == 139 and y == 489:
-            color = (0, 255, 255)
-            cv2.circle(img_color, (x, y), r, color, 2)
+
+    ##############################################
+    ## Block - 1
+    x_alt = 141
+    for icon in ['A', 'B', 'C', 'D', 'E']:
+        # block 1 : Alternative: A, B, C, D, E
+        # Draw a white line from point (x1, y1) to (x2, y2)
+        start_point = (x_alt, 190)      # Starting coordinate
+        end_point   = (x_alt, 800)    # Ending coordinate
+        color       = (255, 0, 0)  # BGR color: white
+        thickness   = 2            # Line thickness in pixels
+
+        cv2.line(img_color, start_point, end_point, color, thickness)
+        x_alt = x_alt + 106
+
+    y_alt = 237
+    for q in range(11,18):
+        # block 1 : Alternative: A, B, C, D, E
+        # Draw a white line from point (x1, y1) to (x2, y2)
+        start_point = (130, y_alt)      # Starting coordinate
+        end_point   = (600, y_alt)    # Ending coordinate
+        color       = (100,0,255)  # BGR color: white
+        thickness   = 2            # Line thickness in pixels
+
+        cv2.line(img_color, start_point, end_point, color, thickness)
+        y_alt = y_alt + 86
+
+    ##################################################################
+
+    ##############################################
+    ## Block - 2
+    x_alt = 759
+    for icon in ['A', 'B', 'C', 'D', 'E']:
+        # block 1 : Alternative: A, B, C, D, E
+        # Draw a white line from point (x1, y1) to (x2, y2)
+        start_point = (x_alt, 190)      # Starting coordinate
+        end_point   = (x_alt, 800)    # Ending coordinate
+        color       = (255, 0, 0)  # BGR color: white
+        thickness   = 2            # Line thickness in pixels
+
+        cv2.line(img_color, start_point, end_point, color, thickness)
+        x_alt = x_alt + 106
+
+    y_alt = 237
+    for q in range(11,18):
+        # block 1 : Alternative: A, B, C, D, E
+        # Draw a white line from point (x1, y1) to (x2, y2)
+        start_point = (750, y_alt)      # Starting coordinate
+        end_point   = (1200, y_alt)    # Ending coordinate
+        color       = (100,0,255)  # BGR color: white
+        thickness   = 2            # Line thickness in pixels
+
+        cv2.line(img_color, start_point, end_point, color, thickness)
+        y_alt = y_alt + 86
+
+    ##################################################################
+
+    ##############################################
+    ## Block - 3
+    x_alt = 1381
+    for icon in ['A', 'B', 'C', 'D', 'E']:
+        # block 1 : Alternative: A, B, C, D, E
+        # Draw a white line from point (x1, y1) to (x2, y2)
+        start_point = (x_alt, 190)      # Starting coordinate
+        end_point   = (x_alt, 800)    # Ending coordinate
+        color       = (255, 0, 0)  # BGR color: white
+        thickness   = 2            # Line thickness in pixels
+
+        cv2.line(img_color, start_point, end_point, color, thickness)
+        x_alt = x_alt + 106
+
+    y_alt = 238
+    for q in range(11,18):
+        # block 1 : Alternative: A, B, C, D, E
+        # Draw a white line from point (x1, y1) to (x2, y2)
+        start_point = (1360, y_alt)      # Starting coordinate
+        end_point   = (1860, y_alt)    # Ending coordinate
+        color       = (100,0,255)  # BGR color: white
+        thickness   = 2            # Line thickness in pixels
+
+        cv2.line(img_color, start_point, end_point, color, thickness)
+        y_alt = y_alt + 101
+
+    ##################################################################
+
+        # Show the image in a window
+        #cv2.imshow("Line Example", img_color)
+        #cv2.waitKey(0)
+        #cv2.destroyAllWindows()
+
+        #if x == 139 and y == 489:
+        #    color = (0, 255, 255)
+        #    cv2.circle(img_color, (x, y), r, color, 2)
 
         #color = (0, 0, 255) if ratio >= FILL_THRESHOLD else (0, 0, 0)
         #cv2.circle(img_color, (x, y), r, color, 2)
