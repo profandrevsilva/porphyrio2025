@@ -120,6 +120,7 @@ for row in rows:
     ##############################################
     ## Block - 1
     x_alt = 141
+
     for icon in ['A', 'B', 'C', 'D', 'E']:
         # block 1 : Alternative: A, B, C, D, E
         # Draw a white line from point (x1, y1) to (x2, y2)
@@ -169,7 +170,7 @@ for row in rows:
         thickness   = 2            # Line thickness in pixels
 
         cv2.line(img_color, start_point, end_point, color, thickness)
-        y_alt = y_alt + 86
+        y_alt = y_alt + 84
 
     ##################################################################
 
@@ -200,6 +201,76 @@ for row in rows:
         y_alt = y_alt + 101
 
     ##################################################################
+
+    ## Fill matrix
+    rows, cols = 7, 5
+    
+    # block 1
+    matrix1 = np.empty((rows, cols), dtype=object)
+
+    xcoor = 141
+    ycoor = 237
+    for y in range(rows):
+        for x in range(cols):
+            matrix1[y, x] = (xcoor, ycoor)
+            xcoor = xcoor + 106
+        ycoor = ycoor + 86
+        xcoor = 141
+    
+    ic(matrix1)
+
+    # block 2
+    matrix2 = np.empty((rows, cols), dtype=object)
+
+    xcoor = 759
+    ycoor = 237
+    for y in range(rows):
+        for x in range(cols):
+            matrix2[y, x] = (xcoor, ycoor)
+            xcoor = xcoor + 106
+        ycoor = ycoor + 84
+        xcoor = 759
+    
+    ic(matrix2)
+
+    # block 3
+    matrix3 = np.empty((rows, cols), dtype=object)
+
+    xcoor = 1381
+    ycoor = 237
+    for y in range(rows):
+        for x in range(cols):
+            matrix3[y, x] = (xcoor, ycoor)
+            xcoor = xcoor + 106
+        ycoor = ycoor + 101
+        xcoor = 1381
+    
+    ic(matrix3)
+
+    # Cor e raio dos pontos
+    color = (0, 225, 0)   # vermelho em BGR
+    radius = 5
+    thickness = -1        # -1 = círculo preenchido
+
+    # Percorrer linhas e colunas
+    for row in matrix1:
+        for (x, y) in row:             # cada elemento é uma tupla (x, y)
+            cv2.circle(img_color, (x, y), radius, color, thickness)
+
+    # Cor e raio dos pontos
+    color = (0, 225, 0)   # vermelho em BGR
+    radius = 5
+    thickness = -1        # -1 = círculo preenchido
+
+    # Percorrer linhas e colunas
+    for row in matrix2:
+        for (x, y) in row:             # cada elemento é uma tupla (x, y)
+            cv2.circle(img_color, (x, y), radius, color, thickness)
+    
+    # Percorrer linhas e colunas
+    for row in matrix3:
+        for (x, y) in row:             # cada elemento é uma tupla (x, y)
+            cv2.circle(img_color, (x, y), radius, color, thickness)
 
         # Show the image in a window
         #cv2.imshow("Line Example", img_color)
