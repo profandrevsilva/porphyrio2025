@@ -64,7 +64,7 @@ circles = sorted(circles, key=lambda c: (c[1], c[0]))
 rows = []
 current_row = []
 last_y = None
-tol = 15  # tolerância para considerar mesma linha
+tol = 5  # tolerância para considerar mesma linha
 
 for (x, y, r) in circles:
     if last_y is None or abs(y - last_y) < tol:
@@ -100,8 +100,6 @@ for row in rows:
         ratio = filled / float(total)
         scores.append((ratio, i))
     
-    #ic(scores)
-
     best_ratio, best_idx = max(scores, key=lambda t: t[0])
     chosen = OPTIONS[best_idx] if best_ratio >= FILL_THRESHOLD else '-'
 
@@ -114,9 +112,17 @@ for row in rows:
     # Desenho na imagem
     for (ratio, i) in scores:
         x, y, r = row[i]
-        ic(row[i])
-        color = (0, 0, 255) if ratio >= FILL_THRESHOLD else (0, 0, 0)
-        cv2.circle(img_color, (x, y), r, color, 2)
+        if ratio > 0.8:
+            print(x, y, ratio)
+            color = (0, 0, 255)
+            cv2.circle(img_color, (x, y), r, color, 2)
+        
+        if x == 139 and y == 489:
+            color = (0, 255, 255)
+            cv2.circle(img_color, (x, y), r, color, 2)
+
+        #color = (0, 0, 255) if ratio >= FILL_THRESHOLD else (0, 0, 0)
+        #cv2.circle(img_color, (x, y), r, color, 2)
     #if chosen != '-':
     #    x, y, r = row[OPTIONS.index(chosen)]
     #    cv2.putText(img_color, chosen, (x - 10, y + 5),
