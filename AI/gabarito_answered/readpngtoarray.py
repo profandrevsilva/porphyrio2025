@@ -235,12 +235,14 @@ thickness = 2
 image = cv2.putText(annot, name, org, font, fontScale, 
                  color, thickness, cv2.LINE_AA, False)
 
+turma = turma[:-1]
+
 turma = 'Turma: ' + turma
 
 print(str(turma))
 
 # org
-org = (1400, 60)
+org = (700, 100)
 
 # Using cv2.putText() method
 image = cv2.putText(annot, turma, org, font, fontScale, 
