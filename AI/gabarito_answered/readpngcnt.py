@@ -78,7 +78,7 @@ if current_row:
     rows.append(sorted(current_row, key=lambda c: c[0]))
 
 
-
+points = []
 # ----------------------------
 # 4. Avaliar preenchimento
 # ----------------------------
@@ -92,6 +92,7 @@ for row in rows:
         continue
 
     scores = []
+
     for i, (x, y, r) in enumerate(row):
         mask = np.zeros_like(thresh)
         cv2.circle(mask, (x, y), r-2, 255, -1)
@@ -99,6 +100,7 @@ for row in rows:
         filled = cv2.countNonZero(cv2.bitwise_and(thresh, thresh, mask=mask))
         ratio = filled / float(total)
         scores.append((ratio, i))
+
     
     best_ratio, best_idx = max(scores, key=lambda t: t[0])
     chosen = OPTIONS[best_idx] if best_ratio >= FILL_THRESHOLD else '-'
@@ -110,12 +112,16 @@ for row in rows:
     })
 
     # Desenho na imagem
+    index = 0
+    
     for (ratio, i) in scores:
         x, y, r = row[i]
         if ratio > 0.8:
-            print(x, y, ratio)
+            print(f"#{index} - Círculo {x}, {y} preenchido! ({ratio})")
             color = (0, 0, 255)
             cv2.circle(img_color, (x, y), r, color, 2)
+            points.append((int(x), int(y)))
+            index +=1
 
     ##############################################
     ## Block - 1
@@ -142,7 +148,7 @@ for row in rows:
         thickness   = 2            # Line thickness in pixels
 
         cv2.line(img_color, start_point, end_point, color, thickness)
-        y_alt = y_alt + 86
+        y_alt = y_alt + 84
 
     ##################################################################
 
@@ -150,7 +156,7 @@ for row in rows:
     ## Block - 2
     x_alt = 759
     for icon in ['A', 'B', 'C', 'D', 'E']:
-        # block 1 : Alternative: A, B, C, D, E
+        # block 2 : Alternative: A, B, C, D, E
         # Draw a white line from point (x1, y1) to (x2, y2)
         start_point = (x_alt, 190)      # Starting coordinate
         end_point   = (x_alt, 800)    # Ending coordinate
@@ -162,7 +168,7 @@ for row in rows:
 
     y_alt = 237
     for q in range(11,18):
-        # block 1 : Alternative: A, B, C, D, E
+        # block 2 : Alternative: A, B, C, D, E
         # Draw a white line from point (x1, y1) to (x2, y2)
         start_point = (750, y_alt)      # Starting coordinate
         end_point   = (1200, y_alt)    # Ending coordinate
@@ -178,7 +184,7 @@ for row in rows:
     ## Block - 3
     x_alt = 1381
     for icon in ['A', 'B', 'C', 'D', 'E']:
-        # block 1 : Alternative: A, B, C, D, E
+        # block 3 : Alternative: A, B, C, D, E
         # Draw a white line from point (x1, y1) to (x2, y2)
         start_point = (x_alt, 190)      # Starting coordinate
         end_point   = (x_alt, 800)    # Ending coordinate
@@ -186,11 +192,11 @@ for row in rows:
         thickness   = 2            # Line thickness in pixels
 
         cv2.line(img_color, start_point, end_point, color, thickness)
-        x_alt = x_alt + 106
+        x_alt = x_alt + 105
 
-    y_alt = 238
+    y_alt = 239
     for q in range(11,18):
-        # block 1 : Alternative: A, B, C, D, E
+        # block 3 : Alternative: A, B, C, D, E
         # Draw a white line from point (x1, y1) to (x2, y2)
         start_point = (1360, y_alt)      # Starting coordinate
         end_point   = (1860, y_alt)    # Ending coordinate
@@ -198,7 +204,7 @@ for row in rows:
         thickness   = 2            # Line thickness in pixels
 
         cv2.line(img_color, start_point, end_point, color, thickness)
-        y_alt = y_alt + 101
+        y_alt = y_alt + 100
 
     ##################################################################
 
@@ -214,10 +220,10 @@ for row in rows:
         for x in range(cols):
             matrix1[y, x] = (xcoor, ycoor)
             xcoor = xcoor + 106
-        ycoor = ycoor + 86
+        ycoor = ycoor + 84
         xcoor = 141
     
-    ic(matrix1)
+    #ic(matrix1)
 
     # block 2
     matrix2 = np.empty((rows, cols), dtype=object)
@@ -231,7 +237,7 @@ for row in rows:
         ycoor = ycoor + 84
         xcoor = 759
     
-    ic(matrix2)
+    #ic(matrix2)
 
     # block 3
     matrix3 = np.empty((rows, cols), dtype=object)
@@ -241,11 +247,11 @@ for row in rows:
     for y in range(rows):
         for x in range(cols):
             matrix3[y, x] = (xcoor, ycoor)
-            xcoor = xcoor + 106
-        ycoor = ycoor + 101
+            xcoor = xcoor + 105
+        ycoor = ycoor + 100
         xcoor = 1381
     
-    ic(matrix3)
+    #ic(matrix3)
 
     # Cor e raio dos pontos
     color = (0, 225, 0)   # vermelho em BGR
@@ -256,11 +262,6 @@ for row in rows:
     for row in matrix1:
         for (x, y) in row:             # cada elemento é uma tupla (x, y)
             cv2.circle(img_color, (x, y), radius, color, thickness)
-
-    # Cor e raio dos pontos
-    color = (0, 225, 0)   # vermelho em BGR
-    radius = 5
-    thickness = -1        # -1 = círculo preenchido
 
     # Percorrer linhas e colunas
     for row in matrix2:
@@ -277,18 +278,24 @@ for row in rows:
         #cv2.waitKey(0)
         #cv2.destroyAllWindows()
 
-        #if x == 139 and y == 489:
-        #    color = (0, 255, 255)
-        #    cv2.circle(img_color, (x, y), r, color, 2)
+    
+    color = (0, 255, 255)
+    cv2.circle(img_color, (1183, 741), 26, color, 2)
 
-        #color = (0, 0, 255) if ratio >= FILL_THRESHOLD else (0, 0, 0)
-        #cv2.circle(img_color, (x, y), r, color, 2)
+    #color = (0, 0, 255) if ratio >= FILL_THRESHOLD else (0, 0, 0)
+    #cv2.circle(img_color, (x, y), r, color, 2)
+
     #if chosen != '-':
     #    x, y, r = row[OPTIONS.index(chosen)]
     #    cv2.putText(img_color, chosen, (x - 10, y + 5),
     #                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
 
     q_num += 1
+
+ic(matrix1)
+ic(matrix2)
+ic(matrix3)
+ic(points)
 
 # ----------------------------
 # 5. Salvar resultados
