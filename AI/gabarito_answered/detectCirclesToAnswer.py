@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import pdfplumber
 from icecream import ic
+from collections import defaultdict
 
 # ---------------------------------------------------
 # 1. Ler PDF e extrair nome e turma
@@ -56,23 +57,23 @@ print(f"Detectados {len(circles)} círculos pretos")
 # ---------------------------------------------------
 img_color = cv2.cvtColor(img_gray, cv2.COLOR_GRAY2BGR)
 
-def build_matrix(x0):
+def build_matrix(x0, y_start=237, n_rows=10, n_cols=5, x_step=106, y_step=83):
     """
-    Retorna matriz 10x5 com coordenadas centrais esperadas
-    para cada questão/alternativa (ajuste se o layout mudar).
+    Retorna matriz n_rows x n_cols com coordenadas centrais esperadas
+    para cada questão/alternativa.
     """
-    m = np.empty((10, 5), dtype=object)
-    y = 237
-    for i in range(10):
+    m = np.empty((n_rows, n_cols), dtype=object)
+    y = y_start
+    for i in range(n_rows):
         x = x0
-        for j in range(5):
+        for j in range(n_cols):
             m[i, j] = (x, y)
-            x += 106
-        y += 83
+            x += x_step
+        y += y_step
     return m
 
-matrix1 = build_matrix(141)   # primeira coluna
-matrix2 = build_matrix(1068)  # segunda coluna
+matrix1 = build_matrix(141)    # primeira coluna
+matrix2 = build_matrix(1068)   # segunda coluna
 
 # pontos de referência (opcional para depuração)
 for matrix in (matrix1, matrix2):
@@ -90,27 +91,37 @@ def detect_answers_multi(circles, matrix, start_q):
     Associa as bolhas detectadas às questões e retorna
     dict {numero_questao: [lista de alternativas]}.
     """
-    out = {start_q - i: [] for i in range(10)}  # ex: {20:[],19:[],...}
+    out = defaultdict(list)
     for cx, cy, _ in circles:
         for i, linha in enumerate(matrix):
             qnum = start_q - i
             for j, (x, y) in enumerate(linha):
-                if (x - 25 < cx < x + 25) and (y - 25 < cy < y + 25):
+                if np.hypot(cx - x, cy - y) < 25:  # distância euclidiana
                     out[qnum].append(jalternative[j])
-    return {k: v for k, v in out.items() if v}  # remove vazios
+    return dict(out)
 
-answers  = detect_answers_multi(circles, matrix1, 20)
-answers2 = detect_answers_multi(circles, matrix2, 30)
-answers.update(answers2)
-ic(answers)
+answers_col1 = detect_answers_multi(circles, matrix1, 20)
+answers_col2 = detect_answers_multi(circles, matrix2, 30)
+
+# combinar sem sobrescrever alternativas
+answers_combined = defaultdict(list)
+for k, v in answers_col1.items():
+    answers_combined[k].extend(v)
+for k, v in answers_col2.items():
+    answers_combined[k].extend(v)
+
+ic(dict(answers_combined))
 
 # ---------------------------------------------------
 # 6. Anotar respostas, nome e turma na imagem
 # ---------------------------------------------------
-for q, alts in answers.items():
+sorted_questions = sorted(answers_combined.keys(), reverse=True)
+y_base = 200
+for idx, q in enumerate(sorted_questions):
+    alts = answers_combined[q]
     txt = f"{q}:{'/'.join(alts)}"
     cv2.putText(img_color, txt,
-                (750, 20 + 30 * q),
+                (650, y_base + 30 * idx),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.8, (0, 0, 255), 2)
 

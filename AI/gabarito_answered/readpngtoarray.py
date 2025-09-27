@@ -233,11 +233,16 @@ for block in blocks:
 # =============================================================
 # 6) Saída
 # =============================================================
+question_offset = {}
+
 if not results:
     print("Nenhuma marcação detectada — ajuste parâmetros.")
 else:
     for q in sorted(results):
-        print(f"Questão {q}: {results[q]}")
+        #print(f"Questão {q}: {results[q]}")
+        question_offset[q] = results[q]
+
+ic(question_offset)
 
 # =============================================================
 # 7) Anotação final da imagem
