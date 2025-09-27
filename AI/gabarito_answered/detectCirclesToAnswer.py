@@ -4,6 +4,8 @@ import easyocr
 import numpy as np
 from icecream import ic
 
+OUT_IMG  = "gabarito_final_CNT_corrected.png"
+
 img = cv2.imread("edf_cnt_gabarito.png", cv2.IMREAD_GRAYSCALE)
 
 # Threshold image to get black areas
@@ -32,11 +34,9 @@ for cnt in contours:
         if radius > 12:
             circles.append((int(x), int(y), int(radius)))
 
-ic(circles)
-
 print(f"Detected {len(circles)} black circles:")
-for c in circles:
-    print(f"Center: ({c[0]}, {c[1]}), Radius: {c[2]}")
+#for c in circles:
+#    print(f"Center: ({c[0]}, {c[1]}), Radius: {c[2]}")
 
 # Optional: draw detected circles
 img_color = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
@@ -151,8 +151,48 @@ for x, y, r in circles:
         #cv2.waitKey(0)
         #cv2.destroyAllWindows()
 
+jalternative = ['A', 'B', 'C', 'D', 'E']
+iquestion = 20
+
+question_alter1 = {}
+
+for icircle in circles:
+    # loop de fora: cada linha
+    for i, linha in enumerate(matrix1):
+        for j, (x, y) in enumerate(linha):
+            #print(f"{i} {j}: matrix: {x}, {y}, circle: {icircle[0]}, {icircle[1]}" )
+            if  (x - 25 < icircle[0] < x + 25) and (y - 25 < icircle[1] < y + 25):
+                #print(f"{iquestion}: {jalternative[j]}")
+                question_alter1[iquestion] = jalternative[j]
+                iquestion = iquestion - 1
+
+question_alter1 = dict(sorted(question_alter1.items()))
+
+iquestion = 30
+
+question_alter2 = {}
+
+for icircle in circles:
+    # loop de fora: cada linha
+    for i, linha in enumerate(matrix2):
+        for j, (x, y) in enumerate(linha):
+            #print(f"{i} {j}: matrix: {x}, {y}, circle: {icircle[0]}, {icircle[1]}" )
+            if  (x - 25 < icircle[0] < x + 25) and (y - 25 < icircle[1] < y + 25):
+                #print(f"{iquestion}: {jalternative[j]}")
+                question_alter2[iquestion] = jalternative[j]
+                iquestion = iquestion - 1
+
+question_alter2 = dict(sorted(question_alter2.items()))
+
+question_alternatives = question_alter1 | question_alter2
+ic(question_alternatives)
+
+# desenha círculos detectados e marcações
+for q, alt in question_alternatives.items():
+    # anotação simples: escreve texto próximo ao topo de cada row (não é a posição precisa)
+    cv2.putText(img_color, f"{q}:{alt}", (750, 20 + 30 * q), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
 #cv2.imshow("Detected Circles", img_color)
-ic(matrix1)
-ic(matrix2)
+cv2.imwrite(OUT_IMG, img_color)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

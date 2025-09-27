@@ -24,7 +24,7 @@ print(turma)
 
 # ---------- parâmetros ----------
 img_path = "math_gabarito.png"    # ajuste aqui
-out_annot = "gabarito_final.png"
+out_annot = "gabarito_final_MATH.png"
 FILL_THRESHOLD = 0.25             # limiar para considerar uma bolha preenchida
 K_COLUMNS = 5                     # A, B, C, D, E
 # Hough params
@@ -214,7 +214,7 @@ for (x, y, r) in circles:
     cv2.circle(annot, (x, y), r, (0, 255, 0), 2)
 for q, alt in results.items():
     # anotação simples: escreve texto próximo ao topo de cada row (não é a posição precisa)
-    cv2.putText(annot, f"{q}:{alt}", (10, 20 + 20 * q), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+    cv2.putText(annot, f"{q}:{alt}", (750, 120 + 30 * q), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
 # font
 font = cv2.FONT_HERSHEY_SIMPLEX
