@@ -63,7 +63,7 @@ for page_num, img in enumerate(pages, start=1):
         circles = np.uint16(np.around(circles))
         for i in circles[0, :]:
             x, y, r = i
-            print(f"Página {page_num}: círculo preto x={x}, y={y}, r={r}px")
+            #print(f"Página {page_num}: círculo preto x={x}, y={y}, r={r}px")
             #x = int(x)
             #y = int(y)
             #circles_list.append((x, y))  # adiciona apenas x, y
@@ -78,7 +78,7 @@ for i in range(5):
     y = y1[j]
     x = random.choice(x1)
     j = j+1
-    print(x, y)
+    #print(x, y)
     circles.append((x, y)) 
 
 j = 0
@@ -86,7 +86,7 @@ for i in range(5):
     y = y2[j]
     x = random.choice(x2)+ 1
     j = j+1
-    print(x, y)
+    #print(x, y)
     circles.append((x, y)) 
 
 j = 0
@@ -94,7 +94,7 @@ for i in range(10):
     y = y3[j]
     x = random.choice(x3)+ 1
     j = j+1
-    print(x, y)
+    #print(x, y)
     circles.append((x, y)) 
 
 j = 0
@@ -102,7 +102,7 @@ for i in range(10):
     y = y4[j]
     x = random.choice(x4)+ 1
     j = j+1
-    print(x, y)
+    #print(x, y)
     circles.append((x, y))
 
 for x, y in circles:

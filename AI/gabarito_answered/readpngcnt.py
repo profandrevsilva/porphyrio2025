@@ -5,9 +5,10 @@ import os
 import csv
 import pandas as pd
 from icecream import ic
-import snoop
+import time
+#import snoop
 
-snoop.install(out='debug1.log')   # registra TUDO, sem limite de profundidade
+#snoop.install(out='debug1.log')   # registra TUDO, sem limite de profundidade
 
 # ----------------------------
 # CONFIGURAÇÃO
@@ -43,18 +44,18 @@ index = 0
 circles = cv2.HoughCircles(
     thresh,
     cv2.HOUGH_GRADIENT,
-    dp=1.19,
+    dp=1.18,
     minDist=20,
     param1=50,
     param2=15,
     minRadius=18,
-    maxRadius=25
+    maxRadius=30
 )
 
 if circles is None:
     raise RuntimeError("Nenhum círculo detectado.")
 
-ic(len(circles[0]))
+#ic(len(circles[0]))
 
 circles = np.uint16(np.around(circles[0]))
 
@@ -98,7 +99,7 @@ for row in rows:
 
     scores = []
 
-    ic(row)
+    #ic(row)
     for i, (x, y, r) in enumerate(row):
         mask = np.zeros_like(thresh)
         cv2.circle(mask, (x, y), r-2, 255, -1)
@@ -108,7 +109,7 @@ for row in rows:
         scores.append((ratio, i))
     
     best_ratio, best_idx = max(scores, key=lambda t: t[0])
-    ic(scores)
+    #ic(scores)
     #ic(best_ratio, best_idx, q_num)
     chosen = OPTIONS[best_idx] if best_ratio >= FILL_THRESHOLD else '-'
 
@@ -117,7 +118,7 @@ for row in rows:
         'Alternativa': chosen,
         'Score': round(best_ratio, 2)
     })
-    ic(results)
+    #ic(results)
 
     # Desenho na imagem
     
@@ -253,9 +254,9 @@ for row in rows:
 
     q_num += 1
 
-ic(matrix1)
-ic(matrix2)
-ic(points)
+#ic(matrix1)
+#ic(matrix2)
+#ic(points)
 
 # ----------------------------
 # 5. Salvar resultados
@@ -266,4 +267,16 @@ cv2.imwrite(OUT_IMG, img_color)
 
 print("Resultados salvos em", OUT_CSV)
 print("Imagem anotada salva em", OUT_IMG)
-print(df)
+#print(df)
+
+ncircles = index
+
+print(35 *"#")
+print(f'Number of circles found is {ncircles}')
+print(35 *"#")
+
+# save it to a text file
+with open("number_of_circles.txt", "w") as f:  # "w" overwrites the file
+    f.write(str(ncircles))
+
+time.sleep(2)

@@ -40,6 +40,6 @@ img_color = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
 for x, y, r in circles:
     cv2.circle(img_color, (x, y), r, (0, 0, 255), 2)
 
-#cv2.imshow("Detected Circles", img_color)
+cv2.imshow("Detected Circles", img_color)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

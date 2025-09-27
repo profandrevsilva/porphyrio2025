@@ -3,10 +3,15 @@
 
 echo "Please, run all the python scripts."
 
-python fill_answer_gabarito.py
-python get_answers.py
-python readpng.py
-python readpngcnt.py
-python readpngtoarray.py
+for i in {1..100}; do    
+    python fill_answer_gabarito.py
+    python get_answers.py
+    python readpng_math.py
+    python readpng_cnt.py
+    #python readpngtoarray.py
+    #python readpngcnt.py
+
+    sleep 2
+done
 
 echo "All scritps were executed. Check the results!"
