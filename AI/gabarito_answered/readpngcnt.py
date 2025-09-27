@@ -36,14 +36,14 @@ if gray is None:
 # Binarização: áreas escuras -> branco
 _, thresh = cv2.threshold(gray, 0, 255,
                           cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-
+index = 0
 # ----------------------------
 # 2. Detectar círculos
 # ----------------------------
 circles = cv2.HoughCircles(
     thresh,
     cv2.HOUGH_GRADIENT,
-    dp=1.1,
+    dp=1.19,
     minDist=20,
     param1=50,
     param2=15,
@@ -120,7 +120,7 @@ for row in rows:
     ic(results)
 
     # Desenho na imagem
-    index = 0
+    
     
     for (ratio, i) in scores:
         x, y, r = row[i]
