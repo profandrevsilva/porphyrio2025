@@ -24,7 +24,6 @@ y3 = [513 + 20*i for i in range(10)]
 x4 = [328 + 25*i for i in range(5)]
 y4 = [513 + 20*i for i in range(10)]
 
-
 # Converter PDF em imagens
 pages = convert_from_path("../gabarito_name/pdfs/A/ANA CLARA JUVENTINO_1A.pdf", dpi=300)
 doc = fitz.open("../gabarito_name/pdfs/A/ANA CLARA JUVENTINO_1A.pdf")  # ou fitz.open() para criar novo
@@ -81,6 +80,11 @@ for i in range(5):
     #print(x, y)
     circles.append((x, y)) 
 
+    # fill one circle more to test
+    x1_ = random.choice(x1)
+    y1_ = y
+    circles.append((x1_, y1_)) 
+
 j = 0
 for i in range(5):
     y = y2[j]
@@ -95,7 +99,11 @@ for i in range(10):
     x = random.choice(x3)+ 1
     j = j+1
     #print(x, y)
-    circles.append((x, y)) 
+    circles.append((x, y))
+    # fill one circle more to test
+    x3_ = random.choice(x3)
+    y3_ = y
+    circles.append((x3_, y3_)) 
 
 j = 0
 for i in range(10):
@@ -104,6 +112,10 @@ for i in range(10):
     j = j+1
     #print(x, y)
     circles.append((x, y))
+    # fill one circle more to test
+    x4_ = random.choice(x4)
+    y4_ = y
+    circles.append((x4_, y4_)) 
 
 for x, y in circles:
     # Draw filled circle
