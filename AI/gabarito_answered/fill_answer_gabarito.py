@@ -17,16 +17,12 @@ x2 = [328 + 25*i for i in range(5)]
 y2 = [357 + 21*i for i in range(5)]
 
 # first matrix: 3
-x3 = [105 + 25*i for i in range(5)]
-y3 = [513 + 20*i for i in range(7)]
+x3 = [106 + 25*i for i in range(5)]
+y3 = [513 + 20*i for i in range(10)]
 
 # first matrix: 4
-x4 = [254 + 25*i for i in range(5)]
-y4 = [513 + 20*i for i in range(7)]
-
-# first matrix: 5
-x5 = [403 + 25*i for i in range(5)]
-y5 = [513 + 24*i for i in range(7)]
+x4 = [328 + 25*i for i in range(5)]
+y4 = [513 + 20*i for i in range(10)]
 
 
 # Converter PDF em imagens
@@ -73,16 +69,6 @@ for page_num, img in enumerate(pages, start=1):
             #circles_list.append((x, y))  # adiciona apenas x, y
 
 
-
-# Lista de coordenadas (x, y) em pontos (1pt ≈ 1/72 polegada)
-#circles = [(106, 357), (131,378)]
-#circles = [(328, 357), (353,378)]
-
-#circles = [(106, 513), (131,534)]
-#circles = [(254, 513), (279,534)]
-#circles = [(403, 513), (428,537), (453, 561), (478,585), (503,609)]
-
-
 radius = 4.2  # em pont
 
 circles = []
@@ -104,7 +90,7 @@ for i in range(5):
     circles.append((x, y)) 
 
 j = 0
-for i in range(7):
+for i in range(10):
     y = y3[j]
     x = random.choice(x3)+ 1
     j = j+1
@@ -112,17 +98,9 @@ for i in range(7):
     circles.append((x, y)) 
 
 j = 0
-for i in range(7):
+for i in range(10):
     y = y4[j]
     x = random.choice(x4)+ 1
-    j = j+1
-    print(x, y)
-    circles.append((x, y))
-
-j = 0
-for i in range(6):
-    y = y5[j]
-    x = random.choice(x5)+ 1
     j = j+1
     print(x, y)
     circles.append((x, y))

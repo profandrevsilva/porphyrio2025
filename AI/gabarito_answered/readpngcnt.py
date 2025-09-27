@@ -5,6 +5,9 @@ import os
 import csv
 import pandas as pd
 from icecream import ic
+import snoop
+
+snoop.install(out='debug1.log')   # registra TUDO, sem limite de profundidade
 
 # ----------------------------
 # CONFIGURAÇÃO
@@ -14,7 +17,7 @@ OUT_CSV  = "gabarito_CNT.csv"
 OUT_IMG  = "gabarito_final_CNT.png"
 
 # Limiares para considerar preenchido
-FILL_THRESHOLD = 0.5     # proporção mínima de pixels escuros
+FILL_THRESHOLD = 0.8     # proporção mínima de pixels escuros
 K_COLUMNS       = 2       # A, B, C, D, E
 OPTIONS         = ['A','B','C','D','E']
 
@@ -40,7 +43,7 @@ _, thresh = cv2.threshold(gray, 0, 255,
 circles = cv2.HoughCircles(
     thresh,
     cv2.HOUGH_GRADIENT,
-    dp=1.2,
+    dp=1.1,
     minDist=20,
     param1=50,
     param2=15,
@@ -67,6 +70,7 @@ last_y = None
 tol = 5  # tolerância para considerar mesma linha
 
 for (x, y, r) in circles:
+
     if last_y is None or abs(y - last_y) < tol:
         current_row.append((x, y, r))
         last_y = y if last_y is None else (last_y + y) / 2
@@ -74,6 +78,7 @@ for (x, y, r) in circles:
         rows.append(sorted(current_row, key=lambda c: c[0]))
         current_row = [(x, y, r)]
         last_y = y
+
 if current_row:
     rows.append(sorted(current_row, key=lambda c: c[0]))
 
@@ -93,6 +98,7 @@ for row in rows:
 
     scores = []
 
+    ic(row)
     for i, (x, y, r) in enumerate(row):
         mask = np.zeros_like(thresh)
         cv2.circle(mask, (x, y), r-2, 255, -1)
@@ -100,9 +106,10 @@ for row in rows:
         filled = cv2.countNonZero(cv2.bitwise_and(thresh, thresh, mask=mask))
         ratio = filled / float(total)
         scores.append((ratio, i))
-
     
     best_ratio, best_idx = max(scores, key=lambda t: t[0])
+    ic(scores)
+    #ic(best_ratio, best_idx, q_num)
     chosen = OPTIONS[best_idx] if best_ratio >= FILL_THRESHOLD else '-'
 
     results.append({
@@ -110,6 +117,7 @@ for row in rows:
         'Alternativa': chosen,
         'Score': round(best_ratio, 2)
     })
+    ic(results)
 
     # Desenho na imagem
     index = 0
@@ -131,7 +139,7 @@ for row in rows:
         # block 1 : Alternative: A, B, C, D, E
         # Draw a white line from point (x1, y1) to (x2, y2)
         start_point = (x_alt, 190)      # Starting coordinate
-        end_point   = (x_alt, 800)    # Ending coordinate
+        end_point   = (x_alt, 1010)    # Ending coordinate
         color       = (255, 0, 0)  # BGR color: white
         thickness   = 2            # Line thickness in pixels
 
@@ -139,77 +147,49 @@ for row in rows:
         x_alt = x_alt + 106
 
     y_alt = 237
-    for q in range(11,18):
+    for q in range(11,21):
         # block 1 : Alternative: A, B, C, D, E
         # Draw a white line from point (x1, y1) to (x2, y2)
-        start_point = (130, y_alt)      # Starting coordinate
+        start_point = (120, y_alt)      # Starting coordinate
         end_point   = (600, y_alt)    # Ending coordinate
         color       = (100,0,255)  # BGR color: white
         thickness   = 2            # Line thickness in pixels
 
         cv2.line(img_color, start_point, end_point, color, thickness)
-        y_alt = y_alt + 84
+        y_alt = y_alt + 83
 
     ##################################################################
 
     ##############################################
     ## Block - 2
-    x_alt = 759
+    x_alt = 1068
     for icon in ['A', 'B', 'C', 'D', 'E']:
         # block 2 : Alternative: A, B, C, D, E
         # Draw a white line from point (x1, y1) to (x2, y2)
         start_point = (x_alt, 190)      # Starting coordinate
-        end_point   = (x_alt, 800)    # Ending coordinate
+        end_point   = (x_alt, 1010)    # Ending coordinate
         color       = (255, 0, 0)  # BGR color: white
         thickness   = 2            # Line thickness in pixels
 
         cv2.line(img_color, start_point, end_point, color, thickness)
         x_alt = x_alt + 106
 
-    y_alt = 237
-    for q in range(11,18):
+    y_alt = 238
+    for q in range(11,21):
         # block 2 : Alternative: A, B, C, D, E
         # Draw a white line from point (x1, y1) to (x2, y2)
-        start_point = (750, y_alt)      # Starting coordinate
-        end_point   = (1200, y_alt)    # Ending coordinate
+        start_point = (1040, y_alt)      # Starting coordinate
+        end_point   = (1550, y_alt)    # Ending coordinate
         color       = (100,0,255)  # BGR color: white
         thickness   = 2            # Line thickness in pixels
 
         cv2.line(img_color, start_point, end_point, color, thickness)
-        y_alt = y_alt + 84
-
-    ##################################################################
-
-    ##############################################
-    ## Block - 3
-    x_alt = 1381
-    for icon in ['A', 'B', 'C', 'D', 'E']:
-        # block 3 : Alternative: A, B, C, D, E
-        # Draw a white line from point (x1, y1) to (x2, y2)
-        start_point = (x_alt, 190)      # Starting coordinate
-        end_point   = (x_alt, 800)    # Ending coordinate
-        color       = (255, 0, 0)  # BGR color: white
-        thickness   = 2            # Line thickness in pixels
-
-        cv2.line(img_color, start_point, end_point, color, thickness)
-        x_alt = x_alt + 105
-
-    y_alt = 239
-    for q in range(11,18):
-        # block 3 : Alternative: A, B, C, D, E
-        # Draw a white line from point (x1, y1) to (x2, y2)
-        start_point = (1360, y_alt)      # Starting coordinate
-        end_point   = (1860, y_alt)    # Ending coordinate
-        color       = (100,0,255)  # BGR color: white
-        thickness   = 2            # Line thickness in pixels
-
-        cv2.line(img_color, start_point, end_point, color, thickness)
-        y_alt = y_alt + 100
+        y_alt = y_alt + 83
 
     ##################################################################
 
     ## Fill matrix
-    rows, cols = 7, 5
+    rows, cols = 10, 5
     
     # block 1
     matrix1 = np.empty((rows, cols), dtype=object)
@@ -220,7 +200,7 @@ for row in rows:
         for x in range(cols):
             matrix1[y, x] = (xcoor, ycoor)
             xcoor = xcoor + 106
-        ycoor = ycoor + 84
+        ycoor = ycoor + 83
         xcoor = 141
     
     #ic(matrix1)
@@ -228,30 +208,16 @@ for row in rows:
     # block 2
     matrix2 = np.empty((rows, cols), dtype=object)
 
-    xcoor = 759
+    xcoor = 1068
     ycoor = 237
     for y in range(rows):
         for x in range(cols):
             matrix2[y, x] = (xcoor, ycoor)
             xcoor = xcoor + 106
-        ycoor = ycoor + 84
-        xcoor = 759
+        ycoor = ycoor + 83
+        xcoor = 1068
     
     #ic(matrix2)
-
-    # block 3
-    matrix3 = np.empty((rows, cols), dtype=object)
-
-    xcoor = 1381
-    ycoor = 237
-    for y in range(rows):
-        for x in range(cols):
-            matrix3[y, x] = (xcoor, ycoor)
-            xcoor = xcoor + 105
-        ycoor = ycoor + 100
-        xcoor = 1381
-    
-    #ic(matrix3)
 
     # Cor e raio dos pontos
     color = (0, 225, 0)   # vermelho em BGR
@@ -268,11 +234,6 @@ for row in rows:
         for (x, y) in row:             # cada elemento é uma tupla (x, y)
             cv2.circle(img_color, (x, y), radius, color, thickness)
     
-    # Percorrer linhas e colunas
-    for row in matrix3:
-        for (x, y) in row:             # cada elemento é uma tupla (x, y)
-            cv2.circle(img_color, (x, y), radius, color, thickness)
-
         # Show the image in a window
         #cv2.imshow("Line Example", img_color)
         #cv2.waitKey(0)
@@ -280,7 +241,7 @@ for row in rows:
 
     
     color = (0, 255, 255)
-    cv2.circle(img_color, (1183, 741), 26, color, 2)
+    cv2.circle(img_color, (1387, 987), 26, color, 2)
 
     #color = (0, 0, 255) if ratio >= FILL_THRESHOLD else (0, 0, 0)
     #cv2.circle(img_color, (x, y), r, color, 2)
@@ -294,7 +255,6 @@ for row in rows:
 
 ic(matrix1)
 ic(matrix2)
-ic(matrix3)
 ic(points)
 
 # ----------------------------

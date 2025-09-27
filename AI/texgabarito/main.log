@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.1.31)  21 SEP 2025 16:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.1.31)  26 SEP 2025 18:10
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1636,112 +1636,20 @@ Underfull \hbox (badness 10000) in paragraph at lines 98--103
  []
 
 
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
+Overfull \vbox (5.30309pt too high) has occurred while \output is active []
 
 
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
+Overfull \vbox (5.30309pt too high) has occurred while \output is active []
 
 
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--175
-[] [] 
- []
-
-
-Overfull \hbox (5.79115pt too wide) in paragraph at lines 175--176
-[] [] 
- []
-
+ <./images/logoporphyrio.png (PNG copy)>]
 
 Package caption Warning: Unused \captionsetup[sub] on input line 57.
 See the caption package documentation for explanation.
 
-[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
-
- <./images/logoporphyrio.png (PNG copy)>] (./main.aux)
+(./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 Package logreq Info: Writing requests to 'main.run.xml'.
@@ -1751,7 +1659,7 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 Here is how much of TeX's memory you used:
  50429 strings out of 478287
  1138730 string characters out of 5849289
- 2016076 words of memory out of 5000000
+ 2017076 words of memory out of 5000000
  67788 multiletter control sequences out of 15000+600000
  501841 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1762,7 +1670,7 @@ e/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/l
 m/lmbx9.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf
 /fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr9.p
 fb>
-Output written on main.pdf (1 page, 182608 bytes).
+Output written on main.pdf (1 page, 182580 bytes).
 PDF statistics:
  127 PDF objects out of 1000 (max. 8388607)
  84 compressed objects within 1 object stream
