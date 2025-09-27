@@ -3,6 +3,25 @@ import cv2
 import easyocr
 import numpy as np
 from icecream import ic
+import pdfplumber
+
+pdf_path = "circulos_preenchidos.pdf"
+
+full_text = ""
+
+with pdfplumber.open(pdf_path) as pdf:
+    for page in pdf.pages:
+        text = page.extract_text()
+        if text:
+            full_text += text + "\n"
+
+# get name 
+name = full_text.split("Aluno(a): ")[1].split("Turma:")[0]
+print(name)
+
+# get turma
+turma = full_text.split("Turma: ")[1].split("Nome do Aluno(a)")[0]
+print(turma)
 
 OUT_IMG  = "gabarito_final_CNT_corrected.png"
 
@@ -191,6 +210,38 @@ ic(question_alternatives)
 for q, alt in question_alternatives.items():
     # anotação simples: escreve texto próximo ao topo de cada row (não é a posição precisa)
     cv2.putText(img_color, f"{q}:{alt}", (750, 20 + 30 * q), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
+# font
+font = cv2.FONT_HERSHEY_SIMPLEX
+
+# org
+org = (600, 100)
+
+# fontScale
+fontScale = 1
+ 
+# Red color in BGR
+color = (0, 0, 255)
+
+# Line thickness of 2 px
+thickness = 2
+
+# Using cv2.putText() method
+image = cv2.putText(img_color, name, org, font, fontScale, 
+                 color, thickness, cv2.LINE_AA, False)
+
+turma = turma[:-1]
+
+turma = 'Turma: ' + turma
+
+print(str(turma))
+
+# org
+org = (700, 150)
+
+# Using cv2.putText() method
+cv2.putText(img_color, turma, org, font, fontScale, 
+                 color, thickness, cv2.LINE_AA, False)
 
 #cv2.imshow("Detected Circles", img_color)
 cv2.imwrite(OUT_IMG, img_color)

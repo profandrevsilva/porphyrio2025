@@ -9,7 +9,7 @@ for i in {1..100}; do
     #python readpng_math.py
     #python readpng_cnt.py
     python readpngtoarray.py
-    #python readpngcnt.py
+    detectCirclesToAnswer.py
 
     sleep 2
 done
