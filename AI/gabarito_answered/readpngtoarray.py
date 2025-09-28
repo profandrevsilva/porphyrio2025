@@ -4,13 +4,18 @@ from pathlib import Path
 import pdfplumber
 from icecream import ic
 import pandas as pd
+import sys
+import os
+
+name = sys.argv[1]
+turma = sys.argv[2]
 
 # -------------------------------------------------------------
 # CONFIGURAÇÃO GERAL
 # -------------------------------------------------------------
-pdf_path = "circulos_preenchidos.pdf"     # PDF com nome/turma
-img_path = "math_gabarito.png"            # imagem do gabarito
-out_annot = "gabarito_final_MATH.png"
+#pdf_path = "circulos_preenchidos.pdf"     # PDF com nome/turma
+img_path = f"screenshot_math_cnt/{turma}/{name}_{turma}_math.png"            # imagem do gabarito
+out_annot = f"screenshot_math_cnt_corrected/{turma}/MATH_corrected_{name}_{turma}.png"
 
 FILL_THRESHOLD = 0.25     # fração mínima para considerar uma bolha marcada
 K_COLUMNS = 5             # A–E
@@ -34,18 +39,20 @@ MULTI_RATIO = 0.6  # usado apenas se MULTI_MODE == 'best'
 # =============================================================
 # 1) Texto do PDF (nome/turma)
 # =============================================================
-full_text = ""
-with pdfplumber.open(pdf_path) as pdf:
-    for page in pdf.pages:
-        text = page.extract_text()
-        if text:
-            full_text += text + "\n"
+#full_text = ""
+#with pdfplumber.open(pdf_path) as pdf:
+#    for page in pdf.pages:
+#        text = page.extract_text()
+#        if text:
+#            full_text += text + "\n"
+#
+## Extrai nome e turma (ajuste se layout mudar)
+#name = full_text.split("Aluno(a): ")[1].split("Turma:")[0].strip()
+#turma = full_text.split("Turma: ")[1].split("Nome do Aluno(a)")[0].strip()
+#print("Nome:", name)
+#print("Turma:", turma)
 
-# Extrai nome e turma (ajuste se layout mudar)
-name = full_text.split("Aluno(a): ")[1].split("Turma:")[0].strip()
-turma = full_text.split("Turma: ")[1].split("Nome do Aluno(a)")[0].strip()
-print("Nome:", name)
-print("Turma:", turma)
+
 
 # =============================================================
 # 2) Carrega imagem e detecta círculos
@@ -243,7 +250,7 @@ else:
         #print(f"Questão {q}: {results[q]}")
         question_offset[q] = results[q]
 
-ic(question_offset)
+#ic(question_offset)
 
 # =============================================================
 # 7) Anotação final da imagem
@@ -264,7 +271,7 @@ for idx, (q, ans) in enumerate(sorted(results.items()), start=1):
                 font, 0.8, (0, 0, 255), 2)
 
 cv2.imwrite(out_annot, annot)
-print("Imagem anotada salva em", out_annot)
+#print("Imagem anotada salva em", out_annot)
 
 # Criar DataFrame
 df = pd.DataFrame([{
@@ -273,4 +280,12 @@ df = pd.DataFrame([{
     "Respostas": question_offset
 }])
 
-print(df)
+ic(df)
+
+path_file = "csv/data_answer_math.csv"
+
+# Se o arquivo existir, abre em modo append, sem escrever o cabeçalho de novo
+if os.path.exists(path_file):
+    df.to_csv(path_file, mode="a", header=False, index=False)
+else:
+    df.to_csv(path_file, index=False)

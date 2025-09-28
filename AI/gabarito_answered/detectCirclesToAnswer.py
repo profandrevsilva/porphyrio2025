@@ -4,6 +4,8 @@ import pdfplumber
 from collections import defaultdict
 from icecream import ic
 import sys
+import pandas as pd
+import os
 
 # ------------------------------
 # 1. Ler PDF e extrair nome e turma
@@ -28,8 +30,6 @@ turma = sys.argv[2]
 # ------------------------------
 # 2. Ler gabarito e pré-processar
 # ------------------------------
-
-print(name)
 OUT_IMG  = f"screenshot_math_cnt_corrected/{turma}/CNT_corrected_{name}_{turma}.png"
 img_gray = cv2.imread(f"screenshot_math_cnt/{turma}/{name}_{turma}_cnt.png", cv2.IMREAD_GRAYSCALE)
 
@@ -116,7 +116,24 @@ for k, v in answers_col2.items():
 #    if len(alts) > 1:
 #        print(f"Atenção: Questão {q} tem múltiplas respostas {alts}")
 
-#ic(dict(answers_combined))
+answers_combined = dict(answers_combined)
+
+# Criar DataFrame
+df = pd.DataFrame([{
+    "Nome": name,
+    "Turma": turma,
+    "Respostas": answers_combined
+}])
+
+ic(df)
+
+path_file = "csv/data_answer_cnt.csv"
+
+# Se o arquivo existir, abre em modo append, sem escrever o cabeçalho de novo
+if os.path.exists(path_file):
+    df.to_csv(path_file, mode="a", header=False, index=False)
+else:
+    df.to_csv(path_file, index=False)
 
 # ------------------------------
 # 6. Anotar imagem
