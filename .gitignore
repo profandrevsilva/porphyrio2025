@@ -11,3 +11,4 @@ _site
 .header.json
 .simstate.json
 *.pdf
+*.png

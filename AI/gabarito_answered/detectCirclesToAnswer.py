@@ -3,29 +3,35 @@ import numpy as np
 import pdfplumber
 from collections import defaultdict
 from icecream import ic
+import sys
 
 # ------------------------------
 # 1. Ler PDF e extrair nome e turma
 # ------------------------------
-pdf_path = "circulos_preenchidos.pdf"
-full_text = ""
+#pdf_path = "circulos_preenchidos.pdf"
+#full_text = ""
 
-with pdfplumber.open(pdf_path) as pdf:
-    for page in pdf.pages:
-        text = page.extract_text()
-        if text:
-            full_text += text + "\n"
+#with pdfplumber.open(pdf_path) as pdf:
+#    for page in pdf.pages:
+#        text = page.extract_text()
+#        if text:
+#            full_text += text + "\n"
 
-name  = full_text.split("Aluno(a): ")[1].split("Turma:")[0].strip()
-turma = full_text.split("Turma: ")[1].split("Nome do Aluno(a)")[0].strip()
-print("Nome:", name)
-print("Turma:", turma)
+#name  = full_text.split("Aluno(a): ")[1].split("Turma:")[0].strip()
+#turma = full_text.split("Turma: ")[1].split("Nome do Aluno(a)")[0].strip()
+#print("Nome:", name)
+#print("Turma:", turma)
+
+name = sys.argv[1]
+turma = sys.argv[2]
 
 # ------------------------------
 # 2. Ler gabarito e pré-processar
 # ------------------------------
-OUT_IMG  = "gabarito_final_CNT_corrected.png"
-img_gray = cv2.imread("edf_cnt_gabarito.png", cv2.IMREAD_GRAYSCALE)
+
+print(name)
+OUT_IMG  = f"screenshot_math_cnt_corrected/{turma}/CNT_corrected_{name}_{turma}.png"
+img_gray = cv2.imread(f"screenshot_math_cnt/{turma}/{name}_{turma}_cnt.png", cv2.IMREAD_GRAYSCALE)
 
 # binarização: bolha preta -> branco
 _, thresh = cv2.threshold(img_gray, 50, 255, cv2.THRESH_BINARY_INV)
@@ -110,7 +116,7 @@ for k, v in answers_col2.items():
 #    if len(alts) > 1:
 #        print(f"Atenção: Questão {q} tem múltiplas respostas {alts}")
 
-ic(dict(answers_combined))
+#ic(dict(answers_combined))
 
 # ------------------------------
 # 6. Anotar imagem
