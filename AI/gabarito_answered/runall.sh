@@ -9,9 +9,9 @@ for i in {1..100}; do
     #python readpng_math.py
     #python readpng_cnt.py
     python readpngtoarray.py
-    detectCirclesToAnswer.py
+    python detectCirclesToAnswer.py
 
-    sleep 2
+    sleep 10
 done
 
 echo "All scritps were executed. Check the results!"

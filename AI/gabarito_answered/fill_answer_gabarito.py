@@ -81,9 +81,9 @@ for i in range(5):
     circles.append((x, y)) 
 
     # fill one circle more to test
-    x1_ = random.choice(x1)
-    y1_ = y
-    circles.append((x1_, y1_)) 
+    #x1_ = random.choice(x1)
+    #y1_ = y
+    #circles.append((x1_, y1_)) 
 
 j = 0
 for i in range(5):
@@ -101,9 +101,9 @@ for i in range(10):
     #print(x, y)
     circles.append((x, y))
     # fill one circle more to test
-    x3_ = random.choice(x3)
-    y3_ = y
-    circles.append((x3_, y3_)) 
+    #x3_ = random.choice(x3)
+    #y3_ = y
+    #circles.append((x3_, y3_)) 
 
 j = 0
 for i in range(10):
@@ -113,9 +113,9 @@ for i in range(10):
     #print(x, y)
     circles.append((x, y))
     # fill one circle more to test
-    x4_ = random.choice(x4)
-    y4_ = y
-    circles.append((x4_, y4_)) 
+    #x4_ = random.choice(x4)
+    #y4_ = y
+    #circles.append((x4_, y4_)) 
 
 for x, y in circles:
     # Draw filled circle

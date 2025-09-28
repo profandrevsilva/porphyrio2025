@@ -259,8 +259,8 @@ for (x, y, r) in circles:
 
 # Escreve o resultado próximo ao canto (ajuste conforme layout)
 for idx, (q, ans) in enumerate(sorted(results.items()), start=1):
-    cv2.putText(annot, f"{q}:{ans}", (750, 120 + 30 * idx),
-                font, 0.7, (255, 0, 0), 2)
+    cv2.putText(annot, f"{q}:{ans}", (650, 120 + 30 * idx),
+                font, 0.8, (0, 0, 255), 2)
 
 cv2.imwrite(out_annot, annot)
 print("Imagem anotada salva em", out_annot)
