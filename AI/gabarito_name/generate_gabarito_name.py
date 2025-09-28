@@ -58,6 +58,10 @@ for turma in turmas:
         for i in range(1, len(reader.pages)):
             writer.add_page(reader.pages[i])
 
+        # add underline to space to avoid error 
+        name_normalized = name.replace(" ", "_")
+        name = name_normalized
+
         # 5. Save the result
         output_pdf_path = f"pdfs/{turma}/{name}_1{turma}.pdf"
         with open(output_pdf_path, "wb") as f:
@@ -77,6 +81,7 @@ for turma in turmas:
     output_file = f"output_pdf/1-Serie-{turma}.pdf"
 
     for pdf in pdf_files:
+        pdf = pdf.replace(" ", "_")
         pdf = pdf + f"_1{turma}.pdf"
         out_pdf = f'pdfs/{turma}/{pdf}'
         print(out_pdf)

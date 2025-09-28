@@ -3,6 +3,7 @@ import numpy as np
 from pathlib import Path
 import pdfplumber
 from icecream import ic
+import pandas as pd
 
 # -------------------------------------------------------------
 # CONFIGURAÇÃO GERAL
@@ -264,3 +265,12 @@ for idx, (q, ans) in enumerate(sorted(results.items()), start=1):
 
 cv2.imwrite(out_annot, annot)
 print("Imagem anotada salva em", out_annot)
+
+# Criar DataFrame
+df = pd.DataFrame([{
+    "Nome": name,
+    "Turma": turma,
+    "Respostas": question_offset
+}])
+
+print(df)

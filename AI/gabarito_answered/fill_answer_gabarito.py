@@ -6,7 +6,11 @@ from pdf2image import convert_from_path
 import cv2
 import numpy as np
 import random
+import pandas as pd
+import sys
 
+name = sys.argv[1]
+turma = sys.argv[2]
 
 # first matrix: 1
 x1 = [106 + 25*i for i in range(5)]
@@ -24,11 +28,15 @@ y3 = [513 + 20*i for i in range(10)]
 x4 = [328 + 25*i for i in range(5)]
 y4 = [513 + 20*i for i in range(10)]
 
-# Converter PDF em imagens
-pages = convert_from_path("../gabarito_name/pdfs/A/ANA CLARA JUVENTINO_1A.pdf", dpi=300)
-doc = fitz.open("../gabarito_name/pdfs/A/ANA CLARA JUVENTINO_1A.pdf")  # ou fitz.open() para criar novo
-page = doc[0]  # pega a primeira página, ou use doc.new_page() para PDF novo
 
+
+# Converter PDF em imagens
+
+path_pdf = f"../gabarito_name/pdfs/{turma}/{name}_1{turma}.pdf"
+
+pages = convert_from_path(path_pdf, dpi=300)
+doc = fitz.open(path_pdf)  # ou fitz.open() para criar novo
+page = doc[0]  # pega a primeira página, ou use doc.new_page() para PDF novo
 
 min_radius_mm = 3
 dpi = 300
@@ -125,4 +133,4 @@ for x, y in circles:
     shape.commit()
 
 # Salvar PDF
-doc.save("circulos_preenchidos.pdf")
+doc.save(f"gabaritos_preenchidos/{turma}/{name}_1{turma}.pdf")
