@@ -22,6 +22,6 @@ for turma in turmas:
     create_folder(turma)
 
     for name in df_names['Nome']:
-        print(f"Turma: {turma} - Aluno: {name}")
+        #print(f"Turma: {turma} - Aluno: {name}")
         name = name.replace(" ", "_")
         os.system(f'python3 detectCirclesToAnswer.py {name} {turma}')

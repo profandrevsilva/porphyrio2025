@@ -56,7 +56,7 @@ for cnt in contours:
         if radius > 12:
             circles.append((int(x), int(y), int(radius)))
 
-print(f"Detectados {len(circles)} círculos pretos")
+#print(f"Detectados {len(circles)} círculos pretos")
 
 # ------------------------------
 # 4. Criar matrizes de referência
@@ -116,7 +116,8 @@ for k, v in answers_col2.items():
 #    if len(alts) > 1:
 #        print(f"Atenção: Questão {q} tem múltiplas respostas {alts}")
 
-answers_combined = dict(answers_combined)
+answers_combined_ = {k: v[0] for k, v in answers_combined.items()}
+answers_combined = dict(sorted(answers_combined_.items()))
 
 # Criar DataFrame
 df = pd.DataFrame([{
@@ -125,7 +126,7 @@ df = pd.DataFrame([{
     "Respostas": answers_combined
 }])
 
-ic(df)
+#ic(df)
 
 path_file = "csv/data_answer_cnt.csv"
 

@@ -271,7 +271,7 @@ for idx, (q, ans) in enumerate(sorted(results.items()), start=1):
                 font, 0.8, (0, 0, 255), 2)
 
 cv2.imwrite(out_annot, annot)
-#print("Imagem anotada salva em", out_annot)
+print("Imagem anotada salva em", out_annot)
 
 # Criar DataFrame
 df = pd.DataFrame([{
@@ -280,7 +280,7 @@ df = pd.DataFrame([{
     "Respostas": question_offset
 }])
 
-ic(df)
+#ic(df)
 
 path_file = "csv/data_answer_math.csv"
 
