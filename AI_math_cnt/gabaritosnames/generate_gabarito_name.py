@@ -13,6 +13,19 @@ import time
 # Get start time 
 start_time = time.time()
 
+def create_folder():
+    folder_name = "pdfs"
+    # Create folder if it doesn't exist
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+        print(f"Folder '{folder_name}' created successfully!")
+        os.system("mkdir -p pdfs/AllClasses")
+    else:
+        print(f"Folder '{folder_name}' already exists.")
+
+# folder to storage the pdfs - gabaritos.
+create_folder()
+
 # path to folders: csv and xlsx
 path_folder_csv = 'inputnames/csv/'
 
