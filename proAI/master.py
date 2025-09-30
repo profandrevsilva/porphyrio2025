@@ -17,6 +17,11 @@ print(50* '*')
 print('Starting to run ALL steps AI...')
 print(50* '*')
 
+
+
+########################################################
+#### Phase 1 
+
 ## Folder names:
 gabaritos = 'gabaritos/'
 names = 'names/'
@@ -27,7 +32,6 @@ src = "data/"
 toolkit = "toolkit.py"
 source1 = "source/phase1/"
 
-########################################################
 # Create folders
 tool.create_folder(gabaritos)
 os.chdir(gabaritos)
@@ -37,10 +41,10 @@ tool.create_folder(pdfs)
 tool.create_folder(csv)
 tool.create_folder(allpdfs)
 
-# Change to root directory
+# Change to root directory and copy files
 os.chdir("../../")
 dst = os.path.join(gabaritos, names)
-shutil.copytree(src, dst, dirs_exist_ok=True)  # copia pasta 
+shutil.copytree(src, dst, dirs_exist_ok=True)
 shutil.copytree(source1, dst, dirs_exist_ok=True)
 
 ## toolkit 
@@ -51,7 +55,6 @@ shutil.copy('toolkit.py', dst)
 dst = os.path.join(gabaritos, names, 'main.pdf')
 shutil.copy('model/main.pdf', dst)
 
-############################################################
 # Run Phase 1:
 os.chdir(gabaritos)
 os.chdir(names)
@@ -59,9 +62,37 @@ os.chdir(names)
 os.system(f'python3 generate_gabarito_name.py')
 
 # return to root directory of the master.py script
-#os.chdir("..")
-#print(os.getcwd())
+os.chdir("../../")
+
 #############################################
+# Phase 2
+source2 = "source/phase2/"
+
+os.chdir(gabaritos)
+
+filled = "preenchidos/"
+tool.create_folder(filled)
+os.chdir(filled)
+tool.create_folder(pdfs)
+os.chdir("../../")
+
+dst = os.path.join(gabaritos, filled)
+shutil.copytree(source2, dst, dirs_exist_ok=True)
+
+# Run Phase 2:
+os.chdir(gabaritos)
+os.chdir(filled)
+
+os.system(f'python3 fill_answer_all.py')
+#############################################
+
+#print(os.getcwd())
+
+
+#dst = os.path.join(gabaritos, names)
+#
+#dst = os.path.join(gabaritos, names)
+#shutil.copytree(source2, dst, dirs_exist_ok=True)
 
 
 # time of execution in minutes
