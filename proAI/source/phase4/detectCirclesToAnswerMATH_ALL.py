@@ -19,5 +19,3 @@ for turma in tqdm(turmas, desc=f"Processing Turma", unit="turma"):
 
 os.remove('detectCirclesToAnswerMATH.py')
 os.remove('detectCirclesToAnswerMATH_ALL.py')
-
-tool.time_exec(start_time)

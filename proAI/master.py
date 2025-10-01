@@ -62,7 +62,7 @@ os.system(f'python3 generate_gabarito_name.py')
 # return to root directory of the master.py script
 os.chdir("../../")
 
-#############################################
+###########################################################
 ### Phase 2
 source2 = "source/phase2/"
 
@@ -82,7 +82,7 @@ os.chdir(gabaritos)
 os.chdir(filled)
 
 os.system(f'python3 fill_answer_all.py')
-############################################
+###########################################################
 ### Phase 3
 os.chdir("../../")
 
@@ -110,7 +110,7 @@ tool.create_folder(cnt)
 
 os.chdir("../")
 os.system(f'python3 get_answersALL.py')
-############################################
+###########################################################
 ### Phase 4
 os.chdir("../../")
 
@@ -138,15 +138,19 @@ os.chdir("../../")
 
 tool.create_folder(csv)
 
-### >>> CNT
+######################### >>> CNT. 
 os.system(f'python3 detectCirclesToAnswerCNT_ALL.py')
 os.system(f'python3 detectCirclesToAnswerMATH_ALL.py')
+
+os.system('python3 compareAnswerToRight.py')
+time.sleep(5)
+os.remove('compareAnswerToRight.py')
+os.remove('toolkit.py')
 
 # time of execution in minutes
 time_exec_min = round( (time.time() - start_time)/60, 4)
 
 print(f'time of execution (preprocessing): {time_exec_min} minutes')
-print('generate gabarito with names. Done!')
 
 print(50* '*')
 print('All steps AI done!')
