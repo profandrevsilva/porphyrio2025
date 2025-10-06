@@ -8,6 +8,9 @@ import sys
 import os
 import toolkit as tool
 
+# -------------------------------------------------------------
+# Entradas
+# -------------------------------------------------------------
 name = sys.argv[1]
 turma = sys.argv[2]
 
@@ -34,11 +37,10 @@ TOP_MARGIN_FRAC = 0.12
 # 'best'    -> pega a mais cheia, mas se a 2ª chega a MULTI_RATIO*top marca como "A/C"
 MULTI_MODE = 'flag'
 MULTI_RATIO = 0.6  # usado apenas se MULTI_MODE == 'best'
-# -------------------------------------------------------------
 
-# =============================================================
-# 2) Carrega imagem e detecta círculos
-# =============================================================
+# -------------------------------------------------------------
+# 1) Carrega imagem e detecta círculos
+# -------------------------------------------------------------
 img_path = Path(img_path)
 if not img_path.exists():
     raise FileNotFoundError(f"Arquivo não encontrado: {img_path}")
@@ -109,7 +111,7 @@ results = {}
 question_offset = 0
 
 # =============================================================
-# 3) Divide em blocos de colunas (esquerda/direita) se houver
+# 2) Divide em blocos de colunas (esquerda/direita) se houver
 # =============================================================
 xs = sorted([c[0] for c in circles])
 blocks = [circles]
@@ -123,7 +125,7 @@ if len(xs) > 1:
         blocks = [left, right]
 
 # =============================================================
-# 4) Para cada bloco, agrupa em linhas e colunas
+# 3) Para cada bloco, agrupa em linhas e colunas
 # =============================================================
 for block in blocks:
     if not block:
@@ -131,7 +133,6 @@ for block in blocks:
     block_xs = sorted([c[0] for c in block])
     col_centers = kmeans_1d(block_xs, k=K_COLUMNS, iters=20)
     if len(col_centers) != K_COLUMNS:
-        # fallback simples por gaps
         diffs = np.diff(block_xs) if len(block_xs) > 1 else np.array([])
         tol = np.median(diffs) * 3 if len(diffs) > 0 else 50
         groups, current = [], [block_xs[0]]
@@ -146,7 +147,6 @@ for block in blocks:
         if len(col_centers) != K_COLUMNS:
             col_centers = list(np.linspace(min(block_xs), max(block_xs), K_COLUMNS))
 
-    # agrupa linhas em Y
     block_sorted = sorted(block, key=lambda t: t[1])
     ys = np.array([b[1] for b in block_sorted])
     diffs_y = np.diff(ys) if len(ys) > 1 else np.array([])
@@ -163,14 +163,13 @@ for block in blocks:
     rows.append(current)
 
     # =========================================================
-    # 5) Avalia cada linha
+    # 4) Avalia cada linha
     # =========================================================
     for i, row in enumerate(rows, start=1):
         row_y = int(np.median([r[1] for r in row]))
         fill_scores = []
 
         for center_x in col_centers:
-            # procura círculo mais próximo
             candidates = [c for c in block
                           if abs(c[1] - row_y) <= tol_y
                           and abs(c[0] - center_x) <= median_r * 1.2]
@@ -186,88 +185,68 @@ for block in blocks:
             mask = np.zeros_like(thresh)
             cv2.circle(mask, (mask_cx, mask_cy), mask_r, 255, -1)
             mask_area = cv2.countNonZero(mask)
-            if mask_area == 0:
-                fill_frac = 0.0
-            else:
+            fill_frac = 0.0
+            if mask_area > 0:
                 filled = cv2.countNonZero(cv2.bitwise_and(thresh, thresh, mask=mask))
                 fill_frac = filled / float(mask_area)
             fill_scores.append(fill_frac)
 
-        # ---------------- lógica de múltiplas respostas ----------------
         qnum = question_offset + i
-        if not fill_scores:
-            continue
-        sorted_idx = sorted(range(len(fill_scores)),
-                            key=lambda idx: fill_scores[idx], reverse=True)
+        sorted_idx = sorted(range(len(fill_scores)), key=lambda idx: fill_scores[idx], reverse=True)
         top = sorted_idx[0]
         top_val = fill_scores[top]
         second_val = fill_scores[sorted_idx[1]] if len(sorted_idx) > 1 else 0.0
+        marked = [j for j, v in enumerate(fill_scores) if v > FILL_THRESHOLD]
 
-        if top_val > FILL_THRESHOLD:
-            marked = [j for j, v in enumerate(fill_scores) if v > FILL_THRESHOLD]
-            if len(marked) == 1:
-                results[qnum] = alternatives[top]
-            else:
-                if MULTI_MODE == 'flag':
+        # --- Nenhuma marcação ---
+        if len(marked) == 0:
+            results[qnum] = "BRANCO"
+        # --- Uma marcação ---
+        elif len(marked) == 1:
+            results[qnum] = alternatives[marked[0]]
+        # --- Múltiplas marcações ---
+        else:
+            if MULTI_MODE == 'flag':
+                results[qnum] = '/'.join([alternatives[j] for j in marked])
+            elif MULTI_MODE == 'invalid':
+                results[qnum] = 'MULTIPLE'
+            elif MULTI_MODE == 'best':
+                if second_val > 0 and (second_val / top_val) > MULTI_RATIO:
                     results[qnum] = '/'.join([alternatives[j] for j in marked])
-                elif MULTI_MODE == 'invalid':
-                    results[qnum] = 'MULTIPLE'
-                elif MULTI_MODE == 'best':
-                    if second_val > 0 and (second_val / top_val) > MULTI_RATIO:
-                        results[qnum] = '/'.join([alternatives[j] for j in marked])
-                    else:
-                        results[qnum] = alternatives[top]
-        # se ninguém passou do limiar, não marca nada
+                else:
+                    results[qnum] = alternatives[top]
+
     question_offset += len(rows)
 
 # =============================================================
-# 6) Saída
+# 5) Anotação final da imagem
 # =============================================================
-question_offset = {}
-
-if not results:
-    print("Nenhuma marcação detectada — ajuste parâmetros.")
-else:
-    for q in sorted(results):
-        #print(f"Questão {q}: {results[q]}")
-        question_offset[q] = results[q]
-
-#ic(question_offset)
-
-# =============================================================
-# 7) Anotação final da imagem
-# =============================================================
+os.makedirs(os.path.dirname(out_annot), exist_ok=True)
 annot = img_color.copy()
 font = cv2.FONT_HERSHEY_SIMPLEX
 color = (0, 0, 255)
 cv2.putText(annot, name, (600, 60), font, 1, color, 2, cv2.LINE_AA)
 cv2.putText(annot, 'Turma: ' + turma, (700, 100), font, 1, color, 2, cv2.LINE_AA)
 
-# Desenha todos os círculos detectados
 for (x, y, r) in circles:
     cv2.circle(annot, (x, y), r, (0, 255, 0), 2)
 
-# Escreve o resultado próximo ao canto (ajuste conforme layout)
 for idx, (q, ans) in enumerate(sorted(results.items()), start=1):
     cv2.putText(annot, f"{q}:{ans}", (650, 120 + 30 * idx),
                 font, 0.8, (0, 0, 255), 2)
 
 cv2.imwrite(out_annot, annot)
-#print("Imagem anotada salva em", out_annot)
 
-# Criar DataFrame
+# =============================================================
+# 6) Criar CSV
+# =============================================================
 df = pd.DataFrame([{
     "Nome": name,
     "Turma": turma,
-    "Respostas": question_offset
+    "Respostas": results
 }])
 
-#ic(df)
-
-path_file = "csv/data_answer_math.csv"
-
-# Se o arquivo existir, abre em modo append, sem escrever o cabeçalho de novo
-if os.path.exists(path_file):
-    df.to_csv(path_file, mode="a", header=False, index=False)
-else:
-    df.to_csv(path_file, index=False)
+path_file = Path("csv/data_answer_math.csv")
+path_file.parent.mkdir(parents=True, exist_ok=True)
+df.to_csv(path_file, mode="a" if path_file.exists() else "w",
+          header=not path_file.exists(), index=False)

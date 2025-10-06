@@ -17,6 +17,7 @@ print(50* '*')
 print('Starting to run ALL the steps AI...')
 print(50* '*')
 
+
 ########################################################
 #### Phase 1 
 
@@ -28,7 +29,16 @@ csv = 'csv/'
 allpdfs = 'allpdfs'
 src = "data/"
 toolkit = "toolkit.py"
+screenshots = 'screenshots/'
+math = 'math/'
+cnt = 'cnt/'
+filled = "preenchidos/"
+corrected = 'corrected/'
+
 source1 = "source/phase1/"
+source2 = "source/phase2/"
+source3 = "source/phase3/"
+source4 = "source/phase4/"
 
 # Create folders
 tool.create_folder(gabaritos)
@@ -38,6 +48,7 @@ os.chdir(names)
 tool.create_folder(pdfs)
 tool.create_folder(csv)
 tool.create_folder(allpdfs)
+
 
 # Change to root directory and copy files
 os.chdir("../../")
@@ -64,11 +75,9 @@ os.chdir("../../")
 
 ###########################################################
 ### Phase 2
-source2 = "source/phase2/"
 
 os.chdir(gabaritos)
 
-filled = "preenchidos/"
 tool.create_folder(filled)
 os.chdir(filled)
 tool.create_folder(pdfs)
@@ -82,11 +91,12 @@ os.chdir(gabaritos)
 os.chdir(filled)
 
 os.system(f'python3 fill_answer_all.py')
-###########################################################
-### Phase 3
 os.chdir("../../")
 
-source3 = "source/phase3/"
+###########################################################
+### Phase 3
+
+
 
 os.chdir(gabaritos)
 answers = 'respostas/'
@@ -96,25 +106,22 @@ os.chdir("../")
 dst = os.path.join(gabaritos, answers)
 shutil.copytree(source3, dst, dirs_exist_ok=True)
 
-screenshots = 'screenshots/'
 os.chdir(gabaritos)
 os.chdir(answers)
 
 tool.create_folder(screenshots)
 os.chdir(screenshots)
 
-math = 'math/'
-cnt = 'cnt/'
+
 tool.create_folder(math)
 tool.create_folder(cnt)
 
 os.chdir("../")
 os.system(f'python3 get_answersALL.py')
-###########################################################
-### Phase 4
 os.chdir("../../")
 
-source4 = "source/phase4/"
+###########################################################
+### Phase 4
 
 os.chdir(gabaritos)
 acertos = 'acertos/'
@@ -128,7 +135,6 @@ os.chdir(gabaritos)
 os.chdir(acertos)
 tool.create_folder(screenshots)
 os.chdir(screenshots)
-corrected = 'corrected/'
 tool.create_folder(corrected)
 os.chdir('corrected/')
 

@@ -83,12 +83,13 @@ for i in range(5):
     y = y1[j]
     x = random.choice(x1)
     j = j+1
-    #print(x, y)
+    
     circles.append((x, y)) 
 
-    # fill one circle more to test
+    # if student fills more than 1 circle
     #x1_ = random.choice(x1)
     #y1_ = y
+
     #circles.append((x1_, y1_)) 
 
 j = 0
@@ -96,7 +97,7 @@ for i in range(5):
     y = y2[j]
     x = random.choice(x2)+ 1
     j = j+1
-    #print(x, y)
+    
     circles.append((x, y)) 
 
 j = 0
@@ -104,11 +105,13 @@ for i in range(10):
     y = y3[j]
     x = random.choice(x3)+ 1
     j = j+1
-    #print(x, y)
+
     circles.append((x, y))
-    # fill one circle more to test
+
+    # if student fills more than 1 circle
     #x3_ = random.choice(x3)
     #y3_ = y
+
     #circles.append((x3_, y3_)) 
 
 j = 0
@@ -116,11 +119,13 @@ for i in range(10):
     y = y4[j]
     x = random.choice(x4)+ 1
     j = j+1
-    #print(x, y)
+    
     circles.append((x, y))
-    # fill one circle more to test
+    
+    # if student fills more than 1 circle
     #x4_ = random.choice(x4)
     #y4_ = y
+
     #circles.append((x4_, y4_)) 
 
 for x, y in circles:
