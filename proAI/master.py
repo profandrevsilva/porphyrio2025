@@ -68,7 +68,7 @@ shutil.copy('model/main.pdf', dst)
 os.chdir(gabaritos)
 os.chdir(names)
 
-os.system(f'python3 generate_gabarito_name.py')
+os.system('python3 generate_gabarito_name.py')
 
 # return to root directory of the master.py script
 os.chdir("../../")
@@ -90,7 +90,7 @@ shutil.copytree(source2, dst, dirs_exist_ok=True)
 os.chdir(gabaritos)
 os.chdir(filled)
 
-os.system(f'python3 fill_answer_all.py')
+os.system('python3 fill_answer_all.py')
 os.chdir("../../")
 
 ###########################################################
@@ -117,7 +117,7 @@ tool.create_folder(math)
 tool.create_folder(cnt)
 
 os.chdir("../")
-os.system(f'python3 get_answersALL.py')
+os.system('python3 get_answersALL.py')
 os.chdir("../../")
 
 ###########################################################
@@ -145,8 +145,8 @@ os.chdir("../../")
 tool.create_folder(csv)
 
 ######################### >>> CNT. 
-os.system(f'python3 detectCirclesToAnswerCNT_ALL.py')
-os.system(f'python3 detectCirclesToAnswerMATH_ALL.py')
+os.system('python3 detectCirclesToAnswerCNT_ALL.py')
+os.system('python3 detectCirclesToAnswerMATH_ALL.py')
 
 os.system('python3 compareAnswerToRight.py')
 time.sleep(5)

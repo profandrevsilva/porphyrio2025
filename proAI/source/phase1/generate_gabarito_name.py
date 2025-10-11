@@ -1,17 +1,12 @@
 import pandas as pd
-
 from PyPDF2 import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import io
 import os
 from pathlib import Path
-from PyPDF2 import PdfReader
-from pypdf import PdfReader, PdfWriter
 import time
-import toolkit as tool
 from tqdm import tqdm
-
 
 # Get start time 
 start_time = time.time()
@@ -19,11 +14,11 @@ start_time = time.time()
 # path to folders: csv and xlsx
 path_folder_csv = 'csv/'
 
-os.system(f'python3 read_names.py')
+os.system('python3 read_names.py')
 
 turmas = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
-for turma in tqdm(turmas, desc=f"Processing Turma", unit="turma"):
+for turma in tqdm(turmas, desc="Processing Turma", unit="turma"):
     print(f"Turma: {turma}...")
     df = pd.read_csv(f'{path_folder_csv}/final_names_1{turma}.csv', sep=',')
 

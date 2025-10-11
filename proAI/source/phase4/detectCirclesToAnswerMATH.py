@@ -1,12 +1,9 @@
 import cv2
 import numpy as np
 from pathlib import Path
-import pdfplumber
-from icecream import ic
 import pandas as pd
 import sys
 import os
-import toolkit as tool
 
 # -------------------------------------------------------------
 # Entradas

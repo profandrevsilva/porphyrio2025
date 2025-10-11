@@ -1,12 +1,8 @@
-from pathlib import Path
-from PyPDF2 import PdfReader
-import re
 import fitz  # PyMuPDF
 from pdf2image import convert_from_path
 import cv2
 import numpy as np
 import random
-import pandas as pd
 import sys
 
 name = sys.argv[1]

@@ -1,7 +1,6 @@
 from pdf2image import convert_from_path
 import cv2
 import numpy as np
-import os
 import pandas as pd
 import toolkit as tool
 

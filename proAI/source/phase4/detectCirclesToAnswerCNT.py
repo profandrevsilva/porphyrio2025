@@ -1,13 +1,9 @@
 import cv2
 import numpy as np
-import pdfplumber
 from collections import defaultdict
-from icecream import ic
 import sys
 import pandas as pd
 import os
-import time
-import toolkit as tool
 
 # ---------------------------------------------------
 # 1. Argumentos: nome e turma
