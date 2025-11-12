@@ -131,5 +131,8 @@ for x, y in circles:
     shape.finish(fill=(0, 0, 0), color=None)  # preenchido amarelo, sem contorno
     shape.commit()
 
+
+print(f"Turma: {turma} - Aluno: {name} - Círculos preenchidos: {len(circles)}")
+
 # Salvar PDF
 doc.save(f"pdfs/{turma}/{name}_1{turma}.pdf")

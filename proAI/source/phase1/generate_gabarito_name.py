@@ -73,7 +73,7 @@ for turma in tqdm(turmas, desc="Processing Turma", unit="turma"):
         with open(output_pdf_path, "wb") as f:
             writer.write(f)
 
-        #print(f"Name: {name} added successfully!")
+        print(f"Name: {name} added successfully!")
 
     # merge files
     folder_path = Path(f"{folder_name}")

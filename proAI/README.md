@@ -45,26 +45,55 @@ O projeto **Avaliação Integrada** tem como objetivo automatizar o processo de 
 ## 📂 Estrutura do Projeto
 
 ```
-avaliacao-integrada/
-│── data/                # PDFs e arquivos de entrada
-│── gabaritos/           # Gabaritos oficiais
-│── recortes/            # Recortes dos gabaritos digitalizados
-│── resultados/          # Relatórios e correções
-│── scripts/             # Códigos Python para cada etapa
-│   │── etapa1_pdf.py
-│   │── etapa2_preenchimento.py
-│   │── etapa3_recorte.py
-│   │── etapa4_correcao.py
-│── README.md            # Documentação do projeto
+$ tree .         
+.
+├── data
+│   ├── names_1A.xlsx
+│   ├── names_1B.xlsx
+│   ├── names_1C.xlsx
+│   ├── names_1D.xlsx
+│   ├── names_1E.xlsx
+│   ├── names_1F.xlsx
+│   ├── names_1G.xlsx
+│   └── names.xlsx
+├── master.py
+├── model
+│   └── main.pdf
+├── README.md
+├── source
+│   ├── phase1
+│   │   ├── generate_gabarito_name.py
+│   │   ├── read_names.py
+│   │   └── toolkit.py
+│   ├── phase2
+│   │   ├── fill_answer_all.py
+│   │   ├── fill_answer_gabarito.py
+│   │   └── toolkit.py
+│   ├── phase3
+│   │   ├── get_answersALL.py
+│   │   └── toolkit.py
+│   └── phase4
+│       ├── compareAnswerToRight.py
+│       ├── detectCirclesToAnswerCNT_ALL.py
+│       ├── detectCirclesToAnswerCNT.py
+│       ├── detectCirclesToAnswerMATH_ALL.py
+│       ├── detectCirclesToAnswerMATH.py
+│       └── toolkit.py
+└── toolkit.py
+
+7 directories, 26 files
 ```
 
 ---
 
 ## 📊 Benefícios
 
-✅ Redução do tempo de correção
+✅ Redução do tempo de 
+
 ✅ Minimização de erros humanos
+
 ✅ Possibilidade de análises estatísticas detalhadas
+
 ✅ Escalabilidade para turmas grandes
 
 ---
