@@ -21,7 +21,7 @@ def extract_bimestre_data(file, bimestre_label):
             turma_info = linha.strip()
             break
 
-    # Detectar automaticamente a linha do cabeçalho (que contém "ALUNO" ou "Disciplina")
+    # Detectar automaticamente a linha do cabeçalho
     header_row_candidates = df.index[
         df.astype(str)
         .apply(lambda x: x.str.contains("ALUNO|Disciplina", case=False, na=False))
@@ -40,10 +40,7 @@ def extract_bimestre_data(file, bimestre_label):
 
     # Coluna de aluno
     possible_name_cols = [c for c in df_data.columns if re.search(r"aluno|nome", c, re.IGNORECASE)]
-    if possible_name_cols:
-        name_col = possible_name_cols[0]
-    else:
-        name_col = df_data.columns[0]
+    name_col = possible_name_cols[0] if possible_name_cols else df_data.columns[0]
 
     df_data["Aluno"] = df_data[name_col]
     df_data = df_data.dropna(subset=["Aluno"])
@@ -154,21 +151,51 @@ if len(uploaded_files) > 0:
     df_turma = df[df["Turma"] == turma_selecionada]
 
     # Abas
-    tab_turma, tab_aluno = st.tabs(["📈 Por Disciplina (Turma)", "👩‍🎓 Por Aluno"])
+    tab_turma, tab_aluno, tab_heat = st.tabs([
+        "📈 Por Disciplina (Turma)",
+        "👩‍🎓 Por Aluno",
+        "🔥 Comparativo entre Salas (Heatmap)"
+    ])
 
     # ----------------------------
     # ABA 1 - POR DISCIPLINA
     # ----------------------------
     with tab_turma:
-        df_media = df_turma.groupby(["Disciplina", "Bimestre"], as_index=False)["Nota"].mean().round(2)
-
         st.subheader("📊 Evolução das Médias da Turma por Disciplina")
-        fig_turma = plot_notas(df_media, f"Médias da Turma {turma_selecionada} por Disciplina")
+
+        # Seleção de bimestre
+        bimestres_disponiveis_turma = sorted(df_turma["Bimestre"].unique())
+        bimestre_turma_sel = st.selectbox(
+            "Selecione o Bimestre:",
+            options=["Todos os Bimestres"] + bimestres_disponiveis_turma,
+            index=0,
+        )
+
+        if bimestre_turma_sel != "Todos os Bimestres":
+            df_turma_filtrado = df_turma[df_turma["Bimestre"] == bimestre_turma_sel]
+        else:
+            df_turma_filtrado = df_turma
+
+        # Cálculo das médias
+        df_media = (
+            df_turma_filtrado.groupby(["Disciplina", "Bimestre"], as_index=False)["Nota"]
+            .mean()
+            .round(2)
+        )
+
+        # Exibição do gráfico
+        titulo = (
+            f"Médias da Turma {turma_selecionada} - {bimestre_turma_sel}"
+            if bimestre_turma_sel != "Todos os Bimestres"
+            else f"Médias da Turma {turma_selecionada} por Disciplina"
+        )
+
+        fig_turma = plot_notas(df_media, titulo)
         st.plotly_chart(fig_turma, use_container_width=True)
 
+        # Tabela de médias com cores
         st.subheader("📋 Tabela de Médias por Disciplina")
 
-        # CSS para reduzir o espaçamento
         st.markdown(
             """
             <style>
@@ -179,7 +206,7 @@ if len(uploaded_files) > 0:
                 padding-right: 6px !important;
             }
             </style>
-        """,
+            """,
             unsafe_allow_html=True,
         )
 
@@ -187,36 +214,119 @@ if len(uploaded_files) > 0:
         styled = pivot.style.format("{:.1f}").map(highlight_by_grade)
         st.dataframe(styled)
 
+        # Legenda de cores
+        st.markdown(
+            """
+            <div style="margin-top: 12px; font-size: 15px;">
+                🟥 <b>Notas abaixo de 5:</b> fundo vermelho escuro<br>
+                🟦 <b>Notas acima de 7:</b> fundo azul escuro<br>
+                ⚪ <b>Entre 5 e 7:</b> sem destaque
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
     # ----------------------------
     # ABA 2 - POR ALUNO
     # ----------------------------
     with tab_aluno:
         st.subheader("👩‍🎓 Comparativo: Aluno x Média da Turma")
 
-        possible_name_cols = [c for c in df_turma.columns if re.search(r"aluno|nome", c, re.IGNORECASE)]
-        nome_col = possible_name_cols[0] if possible_name_cols else "Aluno"
-
+        nome_col = "Aluno"
         alunos = sorted(df_turma[nome_col].dropna().unique())
         aluno_selecionado = st.selectbox("Selecione o aluno:", alunos)
 
         df_aluno = df_turma[df_turma[nome_col] == aluno_selecionado]
 
-        # Gráfico média da turma
         df_media_turma = df_turma.groupby(["Disciplina", "Bimestre"], as_index=False)["Nota"].mean().round(2)
         st.markdown("#### 📘 Média da Turma por Disciplina")
         fig_turma_media = plot_notas(df_media_turma, f"Média da Turma {turma_selecionada}")
         st.plotly_chart(fig_turma_media, use_container_width=True)
 
-        # Gráfico do aluno
         st.markdown(f"#### 👩‍🎓 Notas do Aluno: {aluno_selecionado}")
         fig_aluno = plot_notas(df_aluno, f"Evolução das Notas - {aluno_selecionado}")
         st.plotly_chart(fig_aluno, use_container_width=True)
 
-        # Tabela do aluno
         st.subheader("📋 Tabela de Notas do Aluno")
         pivot_aluno = df_aluno.pivot_table(index="Disciplina", columns="Bimestre", values="Nota")
         styled_aluno = pivot_aluno.style.format("{:.1f}").map(highlight_by_grade)
         st.dataframe(styled_aluno)
+
+    # ----------------------------
+    # ABA 3 - HEATMAP ENTRE SALAS
+    # ----------------------------
+    with tab_heat:
+        st.subheader("🔥 Comparativo entre Salas - Médias por Disciplina e Bimestre")
+
+        bimestres_disponiveis = sorted(df["Bimestre"].unique())
+        bimestre_selecionado = st.selectbox("Selecione o Bimestre:", bimestres_disponiveis)
+
+        # Filtra apenas o bimestre selecionado
+        df_bim = df[df["Bimestre"] == bimestre_selecionado].copy()
+
+        # Limpa nomes das turmas
+        df_bim["Turma"] = (
+            df_bim["Turma"]
+            .str.replace(r"INTEGRAL 9H ANUAL", "", case=False, regex=True)
+            .str.strip()
+        )
+
+        # Garante que todas as disciplinas e turmas apareçam no eixo
+        todas_disciplinas = sorted(df["Disciplina"].dropna().unique())
+        todas_turmas = sorted(df_bim["Turma"].dropna().unique())
+
+        heatmap_data = (
+            df_bim.groupby(["Disciplina", "Turma"])["Nota"]
+            .mean()
+            .unstack("Turma")
+            .reindex(todas_disciplinas)
+            .reindex(columns=todas_turmas)
+        )
+
+        # Cria o heatmap
+        fig_heat = px.imshow(
+            heatmap_data,
+            color_continuous_scale=[
+                (0.0, "#8B0000"),  # vermelho escuro para notas muito baixas
+                (0.0, "#BB5B5B"),  # vermelho escuro para notas muito baixas
+                (0.4, "#A16D63"),  # vermelho claro próximo a 5
+                (0.45, "#996E66"),  # vermelho claro próximo a 5
+                (0.5, "#7398ED"),    # neutro em torno de 6
+                (0.6, "#4F6DB2"),    # neutro em torno de 6
+                (0.6, "#3AD78B"),    # neutro em torno de 6
+                (1.0, "#006400"),  # verde escuro para notas altas
+            ],
+            zmin=0,
+            zmax=10,
+            aspect="auto",
+            title=f"Comparativo de Médias - {bimestre_selecionado}",
+            labels=dict(x="Turma", y="Disciplina", color="Nota Média"),
+        )
+
+        # Melhora legibilidade
+        fig_heat.update_layout(
+            height=900,
+            width=1600,
+            xaxis_tickangle=45,
+            xaxis_title="Turma",
+            yaxis_title="Disciplina",
+            title_font_size=20,
+            margin=dict(l=80, r=40, t=80, b=80),
+        )
+
+        st.plotly_chart(fig_heat, use_container_width=True)
+
+        # Legenda da escala de cores
+        st.markdown(
+            """
+            <div style="margin-top: 12px; font-size: 15px;">
+                🟥 <b>Notas abaixo de 5:</b> vermelho<br>
+                ⚪ <b>Notas médias (5–7):</b> branco<br>
+                🟩 <b>Notas acima de 7:</b> verde
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     # ----------------------------
     # DOWNLOAD CSV
