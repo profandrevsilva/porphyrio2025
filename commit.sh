@@ -7,5 +7,5 @@ git add .
 echo "committing..."
 git commit -m "${1}"
 git pull
-git push -All
+git push -all
 echo "All done! :)"
