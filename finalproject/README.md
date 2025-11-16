@@ -89,35 +89,7 @@ basic.forever(function () {
 
 ---
 
-# 🧩 **5. Ideias de Suporte Criativo (material não estruturado)**
-
-🎨 A criatividade **conta pontos** — então aqui estão sugestões:
-
-### **a) Porta automática de papelão**
-
-* Micro:bit fica escondido dentro de uma “caixa” simulando uma porta.
-* Sensor fica apontado para fora.
-
-### **b) “Robô sentinela”**
-
-* Corpo feito de caixa de sapato
-* Olhos = sensor ultrassônico
-* Micro:bit como "coração" na frente
-
-### **c) Totem de segurança**
-
-* Garrafa PET cortada e forrada com EVA
-* Sensor fica na “janela” frontal
-* Micro:bit fica como painel luminoso
-
-### **d) Caixa de correio futurista**
-
-* Papelão pintado como equipamento de segurança
-* Micro:bit mostra símbolos de alerta
-
----
-
-# ⚙️ **6. Shield e Conexões**
+# ⚙️ **5. Shield e Conexões**
 
 Usar o **shield** facilita:
 
@@ -134,7 +106,7 @@ Se não tiver shield:
 
 ---
 
-# 🎤 **7. Roteiro de Pitch (modelo para o grupo)**
+# 🎤 **6. Roteiro de Pitch (modelo para o grupo)**
 
 Duração ideal: **1 minuto**
 
@@ -161,12 +133,3 @@ Duração ideal: **1 minuto**
 > “Nosso projeto demonstra automação simples, comunicação sem fio e design criativo aplicado a uma situação real.”
 
 ---
-
-# ✔️ Se quiser, posso criar:
-
-🛠️ **um PDF completo com relatório final**
-📐 **desenho do protótipo**
-📦 **lista de materiais personalizada**
-🎤 **um pitch pronto para apresentar**
-
-É só pedir!
