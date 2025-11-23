@@ -28,7 +28,7 @@ def check_password():
                 width: 420px;
                 padding: 30px;
                 border-radius: 12px;
-                background: "#7398ED";
+                background: #7398ED;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                 text-align: center;
             ">
@@ -91,7 +91,7 @@ def extract_bimestre_data(file, bimestre_label):
     df_data.columns = columns
 
     # -----------------------------------------------------------
-    # CORREÇÃO: DETECTAR COLUNA DE ALUNO SEM PEGAR EP / ES / EI
+    # DETECTAR COLUNA DE ALUNO
     # -----------------------------------------------------------
     forbidden = ["EP", "ES", "EI", "EE", "ENGAJAMENTO", "PARCIAL", "PRESENÇA", "FALTA"]
 
@@ -127,7 +127,34 @@ def extract_bimestre_data(file, bimestre_label):
     )
 
     melted["Bimestre"] = bimestre_label
+
+    # -----------------------------------------------------------
+    # SISTEMA SEM FUTUREWARNING:
+    # 1. converte números
+    # 2. converte conceitos ET/ES/EP
+    # 3. aplica apenas a disciplinas específicas
+    # -----------------------------------------------------------
+
+    # Tentativa inicial de número (gera NaN quando é conceito)
+    melted["Nota_num"] = pd.to_numeric(melted["Nota"], errors="coerce")
+
+    conceitos = {"ET": 10, "ES": 5, "EP": 4}
+    disciplinas_conceito = ["ESPORTE-MÚSICA-ARTE"]
+
+    mask = melted["Disciplina"].str.upper().isin(disciplinas_conceito)
+
+    melted.loc[mask, "Nota"] = (
+        melted.loc[mask, "Nota"]
+        .astype(str)
+        .str.upper()
+        .map(conceitos)
+        .fillna(melted.loc[mask, "Nota_num"])
+    )
+
+    # Nota final numérica
     melted["Nota"] = pd.to_numeric(melted["Nota"], errors="coerce")
+    melted.drop(columns=["Nota_num"], inplace=True)
+
     melted["Turma"] = turma_info if turma_info else "Turma Desconhecida"
 
     return melted[["Turma", "Aluno", "Disciplina", "Nota", "Bimestre"]]
@@ -350,5 +377,3 @@ if len(uploaded_files) > 0:
 
 else:
     st.info("📎 Envie entre **1 e 4 arquivos XLSX**.")
-
-
